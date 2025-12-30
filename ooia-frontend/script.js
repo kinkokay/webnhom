@@ -6,8 +6,25 @@ const HERO_SLIDES = [
     { id: 4, type: 'image', src: 'https://www.prada.com/content/dam/pradaspa/home_page/2025/10/Holiday/pradasphere/Pradasphere_DT.jpg/_jcr_content/renditions/cq5dam.web.3360.3360.jpg', title: "MODERN CLASSICS", subtitle: "Thiết kế kinh điển.", btnText: "CHI TIẾT", targetId: "cat_1" }
 ];
 
-let ALL_PRODUCTS = [];
-let CATEGORY_SECTIONS = [];
+const ALL_PRODUCTS = [
+    { id: 1, name: "Áo Cashmere V-Neck", price: 1299000, image: "https://cdn.shopify.com/s/files/1/0123/5065/2473/files/CALIFORNIA_CASHMERE_V-NECK_DRESS_NAVY2.jpg?v=1709177309&format=webp&width=1800&height=1800", category: "Outerwear" },
+    { id: 2, name: "Áo Len Mùa Đông", price: 799000, originalPrice: 999000, image: "https://www.jcrew.com/s7-img-facade/BI841_BL8133?hei=380&crop=0,0,304,0", tag: "Sale", category: "Knitwear" },
+    { id: 3, name: "Quần Tây Office", price: 799000, image: "https://www.jcrew.com/s7-img-facade/CM298_SR7781?hei=380&crop=0,0,304,0", category: "Bottoms" },
+    { id: 4, name: "Áo Sơ Mi Basic", price: 499000, image: "https://www.jcrew.com/s7-img-facade/CM297_SR7307?hei=380&crop=0,0,304,0", category: "Shirts" },
+    { id: 5, name: "Áo Thun Cotton", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO480_SR8417?hei=380&crop=0,0,304,0", category: "T-Shirts" },
+    { id: 6, name: "Quần Jeans Slim", price: 999000, image: "https://www.jcrew.com/s7-img-facade/AR885_NA0111?hei=640&crop=0,0,512,0", tag: "New", category: "Jeans" },
+    { id: 7, name: "Áo Khoác Dài", price: 1499000, image: "https://www.jcrew.com/s7-img-facade/CO474_BL5678?hei=380&crop=0,0,304,0", category: "Outerwear" },
+    { id: 8, name: "Khăn Lụa", price: 299000, image: "https://www.jcrew.com/s7-img-facade/CO536_SR7721?hei=380&crop=0,0,304,0", category: "Accessories" },
+    { id: 9, name: "Áo Len Cổ Lọ", price: 599000, image: "https://www.jcrew.com/s7-img-facade/CO495_BL7398?hei=380&crop=0,0,304,0", category: "Knitwear" },
+    { id: 10, name: "Chân Váy Xếp Ly", price: 999000, image: "https://www.jcrew.com/s7-img-facade/BT793_NA6434?hei=380&crop=0,0,304,0", category: "Skirts" },
+    { id: 11, name: "Áo Blazer", price: 1699000, image: "https://www.jcrew.com/s7-img-facade/CM304_HT3002?hei=380&crop=0,0,304,0", category: "Outerwear" },
+    { id: 12, name: "Túi Xách Da", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO535_SR8604?hei=380&crop=0,0,304,0", category: "Accessories" }
+];
+const CATEGORY_SECTIONS = [
+     { id: "cat_1", title: "OUTERWEAR", description: "Công nghệ giữ ấm tiên tiến.", bannerImage: "https://www.lofficielph.com/_next/image?url=https%3A%2F%2Fwww.datocms-assets.com%2F42755%2F1758715785-women_250719_lv_s10_052_b_lvcom_1920x1080_animation.jpg%3Fauto%3Dformat%252Ccompress%26cs%3Dsrgb&w=3840&q=75", products: ALL_PRODUCTS.slice(0, 4) },
+    { id: "cat_2", title: "CASUAL", description: "Chất liệu cotton mềm mại.", bannerImage: "https://im.uniqlo.com/global-cms/spa/resb3c2de9e8b169740c7f2ca991039164cfr.jpg", products: ALL_PRODUCTS.slice(4, 8) },
+    { id: "cat_3", title: "OFFICE", description: "Lịch lãm chốn công sở.", bannerImage: "http://fashionnet.vn/public/uploads/images/peter-do-ss22-fashion-show-main(1).jpg", products: ALL_PRODUCTS.slice(8, 12) }
+];
 
 
 let currentState = {
