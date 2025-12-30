@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOIA - Online Store</title>
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Style -->
+    <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+    
+    <!-- Overlay cho Mobile Menu -->
+    <div class="menu-overlay" onclick="toggleMenu()"></div>
+
+    <!-- HEADER: Đồng bộ với Landing Page -->
+    <header id="navbar">
+        <div class="container nav-content">
+            <!-- Left: Mobile Menu Trigger -->
+            <button class="hamburger-btn" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+
+            <!-- Center/Left: Logo Text -->
+            <a href="index.html" class="logo">OOIA.</a>
+
+            <!-- Center: Desktop Menu -->
+            <nav class="nav-menu" id="nav-menu">
+                <div class="mobile-menu-header">
+                    <span class="logo-mobile">OOIA.</span>
+                    <button onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <!-- Link trỏ về section Editorial ở trang chủ -->
+                <a href="index.html#editorial">Editorial</a>
+                <a href="#cat_1" onclick="toggleMenu()">Outerwear</a>
+                <a href="#cat_2" onclick="toggleMenu()">Casual</a>
+                <a href="#cat_3" onclick="toggleMenu()">Office</a>
+                <a href="#" onclick="openModal('LOGIN'); toggleMenu()" class="mobile-login-link">Account</a>
+            </nav>
+
+            <!-- Right: Actions -->
+            <div class="nav-actions">
+                <!-- Search Button Added -->
+                <button onclick="openModal('SEARCH')" class="icon-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+
+                <button onclick="openModal('WISHLIST')" class="icon-btn">
+                    <i class="fa-regular fa-heart"></i>
+                    <span id="wishlist-badge" class="badge hidden">0</span>
+                </button>
+
+                <button onclick="openModal('CART')" class="icon-btn">
+                    <i class="fa-solid fa-bag-shopping"></i> <!-- Đổi icon cho sang hơn -->
+                    <span id="cart-badge" class="badge hidden">0</span>
+                </button>
+
+                <button id="user-btn" class="login-btn" onclick="openModal('LOGIN')">LOGIN</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SLIDER -->
+    <section id="hero">
+        <div id="hero-slides"></div>
+        
+        <button class="slider-btn prev" onclick="changeSlide(-1)">
+            <i class="fa-solid fa-arrow-left"></i> <!-- Icon mảnh hơn -->
+        </button>
+        <button class="slider-btn next" onclick="changeSlide(1)">
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+        
+        <div id="hero-indicators"></div>
+    </section>
+
+    <!-- MAIN PRODUCT CONTENT -->
+    <main id="main-content"></main>
+
+    <!-- COMING SOON POSTER SECTION -->
+    <section class="coming-soon-section fade-in-scroll">
+        <div class="container">
+            <div class="cs-poster">
+                <div class="cs-img-col">
+                    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop" alt="Coming Soon Teaser">
+                </div>
+                <div class="cs-text-col">
+                    <span class="cs-label">Coming Soon</span>
+                    <h3>The Silk Road<br><em>Limited Edition</em></h3>
+                    <div class="cs-divider"></div>
+                    <p>Bộ sưu tập lụa tơ tằm thủ công kết hợp với nghệ thuật nhuộm tự nhiên. Đăng ký để nhận thông báo sớm nhất.</p>
+                    
+                    <div class="cs-form-wrap">
+                        <input type="email" id="cs-email" placeholder="Email của bạn..." class="cs-input">
+                        <button onclick="subscribeNewsletter()" class="cs-btn">Notify Me</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLOGAN SECTION -->
+    <section class="slogan-section fade-in-scroll">
+        <div class="container">
+            <h2>Simple Made Better</h2>
+            <p>"Chúng tôi không chỉ tạo ra quần áo. Chúng tôi tạo ra sự thoải mái, niềm vui và những khả năng mới."</p>
+            <a href="#" class="btn-underline">Our Philosophy</a>
+        </div>
+    </section>
+
+    <!-- FOOTER: Removed Newsletter, Adjusted Layout -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h4>OOIA.</h4>
+                    <p>Designed for Fashion Lovers.</p>
+                </div>
+                <div>
+                    <h5>Shop</h5>
+                    <ul>
+                        <li><a href="#">New Arrivals</a></li>
+                        <li><a href="#">Best Sellers</a></li>
+                        <li><a href="#">Accessories</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 OOIA Fashion House.</p>
+                <div class="socials">
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#"><i class="fa-brands fa-pinterest-p"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL (Login/Cart/Size) -->
+    <div id="modal-overlay" class="hidden">
+        <div id="modal-content">
+            <button onclick="closeModal()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="shop.js"></script>
+</body>
+</html>
