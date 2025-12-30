@@ -40,9 +40,41 @@ const HERO_SLIDES = [
 ];
 
 
-let ALL_PRODUCTS = [];
+let ALL_PRODUCTS = [
+    { id: 1, name: "Áo 1", price: 1299000, image: "https://cdn.shopify.com/s/files/1/0123/5065/2473/files/CALIFORNIA_CASHMERE_V-NECK_DRESS_NAVY2.jpg?v=1709177309&format=webp&width=1800&height=1800", category: "Outerwear" },
+    { id: 2, name: "Áo 2", price: 799000, originalPrice: 999000, image: "https://www.jcrew.com/s7-img-facade/BI841_BL8133?hei=380&crop=0,0,304,0", tag: "Sale", category: "Knitwear" },
+    { id: 3, name: "Áo 3", price: 799000, image: "https://www.jcrew.com/s7-img-facade/CM298_SR7781?hei=380&crop=0,0,304,0", category: "Bottoms" },
+    { id: 4, name: "Áo 4", price: 499000, image: "https://www.jcrew.com/s7-img-facade/CM297_SR7307?hei=380&crop=0,0,304,0", category: "Shirts" },
+    { id: 5, name: "Áo 5", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO480_SR8417?hei=380&crop=0,0,304,0", category: "T-Shirts" },
+    { id: 6, name: "Quần 1", price: 999000, image: "https://www.jcrew.com/s7-img-facade/AR885_NA0111?hei=640&crop=0,0,512,0", tag: "New", category: "Jeans" },
+    { id: 7, name: "Áo 36", price: 1499000, image: "https://www.jcrew.com/s7-img-facade/CO474_BL5678?hei=380&crop=0,0,304,0", category: "Outerwear" },
+    { id: 8, name: "Áo 7", price: 299000, image: "https://www.jcrew.com/s7-img-facade/CO536_SR7721?hei=380&crop=0,0,304,0", category: "Accessories" },
+    { id: 9, name: "Áo 8", price: 599000, image: "https://www.jcrew.com/s7-img-facade/CO495_BL7398?hei=380&crop=0,0,304,0", category: "Knitwear" },
+    { id: 10, name: "Áo 9", price: 999000, image: "https://www.jcrew.com/s7-img-facade/BT793_NA6434?hei=380&crop=0,0,304,0", category: "Skirts" },
+    { id: 11, name: "Áo 10", price: 1699000, image: "https://www.jcrew.com/s7-img-facade/CM304_HT3002?hei=380&crop=0,0,304,0", category: "Outerwear" },
+    { id: 12, name: "Áo 18", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO535_SR8604?hei=380&crop=0,0,304,0", category: "Accessories" }
+];
 
-let CATEGORY_SECTIONS = [];
+let CATEGORY_SECTIONS = [
+     {
+        id: "cat_1", title: "Outerwear",
+        description: "Bảo vệ bạn khỏi các yếu tố thời tiết nhưng vẫn giữ được vẻ thanh lịch. Các thiết kế áo khoác của chúng tôi tập trung vào phom dáng kiến trúc và chất liệu bền vững.",
+        bannerImage: "https://www.lofficielph.com/_next/image?url=https%3A%2F%2Fwww.datocms-assets.com%2F42755%2F1758715785-women_250719_lv_s10_052_b_lvcom_1920x1080_animation.jpg%3Fauto%3Dformat%252Ccompress%26cs%3Dsrgb&w=3840&q=75",
+        products: ALL_PRODUCTS.slice(0, 4)
+    },
+    {
+        id: "cat_2", title: "Casual",
+        description: "Sự sang trọng thầm lặng cho ngày thường. Chất liệu cotton Ai Cập và Linen thoáng khí mang lại cảm giác nhẹ nhàng tựa như không.",
+        bannerImage: "https://im.uniqlo.com/global-cms/spa/resb3c2de9e8b169740c7f2ca991039164cfr.jpg",
+        products: ALL_PRODUCTS.slice(4, 8)
+    },
+    {
+        id: "cat_3", title: "Office",
+        description: "Định nghĩa lại trang phục công sở hiện đại. Những đường cắt sắc sảo, tối giản chi tiết thừa để tôn vinh sự chuyên nghiệp.",
+        bannerImage: "http://fashionnet.vn/public/uploads/images/peter-do-ss22-fashion-show-main(1).jpg",
+        products: ALL_PRODUCTS.slice(8, 12)
+    }
+];
 
 // --- STATE ---
 // --- STATE ---
