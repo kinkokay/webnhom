@@ -40,7 +40,7 @@ const HERO_SLIDES = [
 ];
 
 
-const ALL_PRODUCTS = [
+let ALL_PRODUCTS = [
     { id: 1, name: "Áo 1", price: 1299000, image: "https://cdn.shopify.com/s/files/1/0123/5065/2473/files/CALIFORNIA_CASHMERE_V-NECK_DRESS_NAVY2.jpg?v=1709177309&format=webp&width=1800&height=1800", category: "Outerwear" },
     { id: 2, name: "Áo 2", price: 799000, originalPrice: 999000, image: "https://www.jcrew.com/s7-img-facade/BI841_BL8133?hei=380&crop=0,0,304,0", tag: "Sale", category: "Knitwear" },
     { id: 3, name: "Áo 3", price: 799000, image: "https://www.jcrew.com/s7-img-facade/CM298_SR7781?hei=380&crop=0,0,304,0", category: "Bottoms" },
@@ -55,7 +55,7 @@ const ALL_PRODUCTS = [
     { id: 12, name: "Áo 18", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO535_SR8604?hei=380&crop=0,0,304,0", category: "Accessories" }
 ];
 
-const CATEGORY_SECTIONS = [
+let CATEGORY_SECTIONS = [
      {
         id: "cat_1", title: "Outerwear",
         description: "Bảo vệ bạn khỏi các yếu tố thời tiết nhưng vẫn giữ được vẻ thanh lịch. Các thiết kế áo khoác của chúng tôi tập trung vào phom dáng kiến trúc và chất liệu bền vững.",
@@ -76,7 +76,6 @@ const CATEGORY_SECTIONS = [
     }
 ];
 
-// --- STATE ---
 // --- STATE ---
 let currentState = {
     slideIndex: 0,
@@ -137,9 +136,11 @@ function handleLogout() {
 
 // --- INIT ---
 document.addEventListener('DOMContentLoaded', async () => {
-    await fetchProducts(); // Gọi API trước
-    renderHero(); // Render sau khi có data (nếu hero cũng động)
-    // Các logic khác...
+    renderHero();
+    renderCategories();
+    updateNavbar();
+    await fetchProducts(); 
+    
 });
 
 async function fetchProducts() {
