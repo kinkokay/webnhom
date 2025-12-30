@@ -71,7 +71,7 @@ let CATEGORY_SECTIONS = [
     {
         id: "cat_3", title: "Office",
         description: "Định nghĩa lại trang phục công sở hiện đại. Những đường cắt sắc sảo, tối giản chi tiết thừa để tôn vinh sự chuyên nghiệp.",
-        bannerImage: "http://fashionnet.vn/public/uploads/images/peter-do-ss22-fashion-show-main(1).jpg",
+        bannerImage: "https://fashionnet.vn/public/uploads/images/peter-do-ss22-fashion-show-main(1).jpg",
         products: ALL_PRODUCTS.slice(8, 12)
     }
 ];
