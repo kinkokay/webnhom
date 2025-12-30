@@ -12,8 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors()); // Cho phép mọi nguồn truy cập (Dev mode)
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.static(__dirname));
-
+app.use(express.static(path.join(__dirname, 'ooia-frontend')));
 // --- ROUTES (API) ---
 
 // 1. Lấy danh sách Categories
@@ -110,11 +109,11 @@ app.post('/api/orders', async (req, res) => {
 }); 
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    res.sendFile(path.join(__dirname, 'ooia-frontend', 'index.html'));
 });
 
 app.get('/shop', (req, res) => {
-    res.sendFile(path.join(__dirname, 'shop.html'));
+    res.sendFile(path.join(__dirname, 'ooia-frontend', 'shop.html'));
 });
 
 // Chạy server
