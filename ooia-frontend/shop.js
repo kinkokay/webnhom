@@ -71,7 +71,7 @@ let CATEGORY_SECTIONS = [
     {
         id: "cat_3", title: "Office",
         description: "Định nghĩa lại trang phục công sở hiện đại. Những đường cắt sắc sảo, tối giản chi tiết thừa để tôn vinh sự chuyên nghiệp.",
-        bannerImage: "https://postimg.cc/8FrdS3bV",
+        bannerImage: "https://www.highsnobiety.com/static-assets/dato/1637753760-210909edtentwfw21nycpeterdomikeseegars18.jpg?fp-x=0.5&fp-y=0.5&fit=crop&auto=compress%2Cformat&cs=srgb&ar=1200%3A800&w=1200",
         products: ALL_PRODUCTS.slice(8, 12)
     }
 ];
