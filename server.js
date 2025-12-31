@@ -41,7 +41,37 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-// 3. Đăng nhập (Đơn giản)
+// 3. Đăng ký tài khoản (API Mới)
+app.post('/api/register', async (req, res) => {
+    const { username, email, password } = req.body;
+
+    // Validate cơ bản
+    if (!username || !email || !password) {
+        return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin' });
+    }
+
+    try {
+        // a. Kiểm tra xem email đã tồn tại chưa
+        const [existingUsers] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+        if (existingUsers.length > 0) {
+            return res.status(409).json({ success: false, message: 'Email này đã được sử dụng' });
+        }
+
+        // b. Insert user mới vào database
+        // Lưu ý: Ở đây username từ frontend mình sẽ lưu vào cột full_name
+        const sql = 'INSERT INTO users (full_name, email, password_hash) VALUES (?, ?, ?)';
+        await db.query(sql, [username, email, password]);
+
+        res.status(201).json({ success: true, message: 'Đăng ký thành công' });
+
+    } catch (err) {
+        console.error("Register Error:", err);
+        res.status(500).json({ success: false, message: 'Lỗi server, vui lòng thử lại sau' });
+    }
+});
+
+
+// 4. Đăng nhập (Đơn giản)
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -52,13 +82,15 @@ app.post('/api/login', async (req, res) => {
         }
 
         const user = users[0];
-        // Lưu ý: Thực tế bạn cần dùng bcrypt để so sánh password hash
+
         if (password === user.password_hash) { 
              // Trả về thông tin user (trừ password)
             res.json({ 
+                success: true,
+                user:{
                 id: user.id, 
                 email: user.email, 
-                full_name: user.full_name 
+                full_name: user.full_name }
             });
         } else {
             res.status(401).json({ message: 'Incorrect password' });
@@ -68,7 +100,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// 4. Tạo đơn hàng (Transaction)
+// 5. Tạo đơn hàng (Transaction)
 app.post('/api/orders', async (req, res) => {
     const { customer_name, customer_phone, shipping_address, cart, total_amount } = req.body;
     
