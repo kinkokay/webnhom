@@ -40,11 +40,42 @@ const HERO_SLIDES = [
 ];
 
 
-let ALL_PRODUCTS = [];
+let ALL_PRODUCTS = [
+    { id: 1, name: "Áo 1", price: 1299000, image: "https://cdn.shopify.com/s/files/1/0123/5065/2473/files/CALIFORNIA_CASHMERE_V-NECK_DRESS_NAVY2.jpg?v=1709177309&format=webp&width=1800&height=1800", category: "Outerwear" },
+    { id: 2, name: "Áo 2", price: 799000, originalPrice: 999000, image: "https://www.jcrew.com/s7-img-facade/BI841_BL8133?hei=380&crop=0,0,304,0", tag: "Sale", category: "Knitwear" },
+    { id: 3, name: "Áo 3", price: 799000, image: "https://www.jcrew.com/s7-img-facade/CM298_SR7781?hei=380&crop=0,0,304,0", category: "Bottoms" },
+    { id: 4, name: "Áo 4", price: 499000, image: "https://www.jcrew.com/s7-img-facade/CM297_SR7307?hei=380&crop=0,0,304,0", category: "Shirts" },
+    { id: 5, name: "Áo 5", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO480_SR8417?hei=380&crop=0,0,304,0", category: "T-Shirts" },
+    { id: 6, name: "Quần 1", price: 999000, image: "https://www.jcrew.com/s7-img-facade/AR885_NA0111?hei=640&crop=0,0,512,0", tag: "New", category: "Jeans" },
+    { id: 7, name: "Áo 36", price: 1499000, image: "https://www.jcrew.com/s7-img-facade/CO474_BL5678?hei=380&crop=0,0,304,0", category: "Outerwear" },
+    { id: 8, name: "Áo 7", price: 299000, image: "https://www.jcrew.com/s7-img-facade/CO536_SR7721?hei=380&crop=0,0,304,0", category: "Accessories" },
+    { id: 9, name: "Áo 8", price: 599000, image: "https://www.jcrew.com/s7-img-facade/CO495_BL7398?hei=380&crop=0,0,304,0", category: "Knitwear" },
+    { id: 10, name: "Áo 9", price: 999000, image: "https://www.jcrew.com/s7-img-facade/BT793_NA6434?hei=380&crop=0,0,304,0", category: "Skirts" },
+    { id: 11, name: "Áo 10", price: 1699000, image: "https://www.jcrew.com/s7-img-facade/CM304_HT3002?hei=380&crop=0,0,304,0", category: "Outerwear" },
+    { id: 12, name: "Áo 18", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO535_SR8604?hei=380&crop=0,0,304,0", category: "Accessories" }
+];
 
-let CATEGORY_SECTIONS = [];
+let CATEGORY_SECTIONS = [
+     {
+        id: "cat_1", title: "Outerwear",
+        description: "Bảo vệ bạn khỏi các yếu tố thời tiết nhưng vẫn giữ được vẻ thanh lịch. Các thiết kế áo khoác của chúng tôi tập trung vào phom dáng kiến trúc và chất liệu bền vững.",
+        bannerImage: "https://www.lofficielph.com/_next/image?url=https%3A%2F%2Fwww.datocms-assets.com%2F42755%2F1758715785-women_250719_lv_s10_052_b_lvcom_1920x1080_animation.jpg%3Fauto%3Dformat%252Ccompress%26cs%3Dsrgb&w=3840&q=75",
+        products: ALL_PRODUCTS.slice(0, 4)
+    },
+    {
+        id: "cat_2", title: "Casual",
+        description: "Sự sang trọng thầm lặng cho ngày thường. Chất liệu cotton Ai Cập và Linen thoáng khí mang lại cảm giác nhẹ nhàng tựa như không.",
+        bannerImage: "https://im.uniqlo.com/global-cms/spa/resb3c2de9e8b169740c7f2ca991039164cfr.jpg",
+        products: ALL_PRODUCTS.slice(4, 8)
+    },
+    {
+        id: "cat_3", title: "Office",
+        description: "Định nghĩa lại trang phục công sở hiện đại. Những đường cắt sắc sảo, tối giản chi tiết thừa để tôn vinh sự chuyên nghiệp.",
+        bannerImage: "https://www.highsnobiety.com/static-assets/dato/1637753760-210909edtentwfw21nycpeterdomikeseegars18.jpg?fp-x=0.5&fp-y=0.5&fit=crop&auto=compress%2Cformat&cs=srgb&ar=1200%3A800&w=1200",
+        products: ALL_PRODUCTS.slice(8, 12)
+    }
+];
 
-// --- STATE ---
 // --- STATE ---
 let currentState = {
     slideIndex: 0,
@@ -105,9 +136,11 @@ function handleLogout() {
 
 // --- INIT ---
 document.addEventListener('DOMContentLoaded', async () => {
-    await fetchProducts(); // Gọi API trước
-    renderHero(); // Render sau khi có data (nếu hero cũng động)
-    // Các logic khác...
+    renderHero();
+    renderCategories();
+    updateNavbar();
+    await fetchProducts(); 
+    
 });
 
 async function fetchProducts() {
@@ -371,29 +404,61 @@ function openModal(type) {
 
     overlay.classList.remove('hidden');
 
+    // 1. LOGIN
     if(type === 'LOGIN') {
         if(currentState.user) {
+            // Đã đăng nhập
+            const displayName = currentState.user.name || currentState.user.email || 'User';
             body.innerHTML = `
                 <div class="modal-body-content">
-                    <h2 class="modal-title">My Account</h2>
+                    <h2 class="modal-title">Tài khoản</h2>
                     <div style="text-align: center; padding: 2rem 0;">
-                        <p style="margin-bottom: 2rem; font-size: 1.2rem;">Welcome back, <strong>${currentState.user}</strong></p>
-                        <button onclick="logout()" class="modal-btn">Log Out</button>
+                        <p style="margin-bottom: 2rem; font-size: 1.2rem;">
+                            Xin chào, <strong>${displayName}</strong>
+                        </p>
+                        <button onclick="logout()" class="modal-btn">Đăng xuất</button>
                     </div>
                 </div>`;
         } else {
+            // Chưa đăng nhập
             body.innerHTML = `
                 <div class="modal-body-content">
-                    <h2 class="modal-title">Login</h2>
-                    <div>
-                        <input type="text" id="login-name" placeholder="Username / Email" class="input-field">
-                        <input type="password" placeholder="Password" class="input-field">
-                        <button onclick="login()" class="modal-btn">Sign In</button>
-                        <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: #666;">Don't have an account? <a href="#" style="text-decoration: underline;">Register</a></p>
+                    <button onclick="closeModal()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+                    <h2 class="modal-title">Đăng Nhập</h2>
+                    <div class="auth-form" style="padding: 0 1rem;">
+                        <input type="text" id="login-username" placeholder="Email của bạn" class="input-field">
+                        <input type="password" id="login-password" placeholder="Mật khẩu" class="input-field">
+                        <p id="auth-error" class="error-msg"></p>
+                        <button onclick="handleLogin()" class="modal-btn">Đăng Nhập</button>
+                        <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: #666;">
+                            Chưa có tài khoản? 
+                            <a href="#" onclick="openModal('REGISTER')" style="text-decoration: underline; color: #000; font-weight: 600;">Đăng ký ngay</a>
+                        </p>
                     </div>
                 </div>`;
         }
-    } else if (type === 'SEARCH') {
+    }
+    // 2. REGISTER
+    else if (type === 'REGISTER') {
+        body.innerHTML = `
+            <div class="modal-body-content">
+                <button onclick="closeModal()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
+                <h2 class="modal-title">Đăng Ký</h2>
+                <div class="auth-form" style="padding: 0 1rem;">
+                    <input type="text" id="reg-username" placeholder="Tên hiển thị (VD: Tuan Anh)" class="input-field">
+                    <input type="email" id="reg-email" placeholder="Email (VD: abc@gmail.com)" class="input-field">
+                    <input type="password" id="reg-password" placeholder="Mật khẩu" class="input-field">
+                    <p id="auth-error" class="error-msg"></p>
+                    <button onclick="handleRegister()" class="modal-btn">Tạo Tài Khoản</button>
+                    <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; color: #666;">
+                        Đã có tài khoản? 
+                        <a href="#" onclick="openModal('LOGIN')" style="text-decoration: underline; color: #000; font-weight: 600;">Đăng nhập</a>
+                    </p>
+                </div>
+            </div>`;
+    }
+    // 3. SEARCH 
+    else if (type === 'SEARCH') {
         body.innerHTML = `
             <div class="modal-body-content">
                 <button onclick="closeModal()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
@@ -406,12 +471,15 @@ function openModal(type) {
                 </div>
             </div>
         `;
-        // Autofocus input after render
-        setTimeout(() => document.querySelector('.search-input').focus(), 100);
-
-    } else if (type === 'CART') {
+        // Autofocus input
+        setTimeout(() => {
+            const input = document.querySelector('.search-input');
+            if(input) input.focus();
+        }, 100);
+    } 
+    // 4. CART
+    else if (type === 'CART') {
         const total = currentState.cart.reduce((sum, item) => sum + item.price, 0);
-        // Cart Layout: Dark Header
         body.innerHTML = `
             <div style="display: flex; flex-direction: column; height: 100%;">
                 <div class="modal-header-cart">
@@ -428,7 +496,6 @@ function openModal(type) {
                                 <p style="font-size: 0.8rem; color: #666; margin: 5px 0;">Size: ${item.size}</p>
                                 <div>
                                     <span style="font-weight: 600;" class="${item.originalPrice ? 'text-red' : ''}">${item.price.toLocaleString()} ₫</span>
-                                    ${item.originalPrice ? `<span style="font-size: 0.8rem; color: #999; text-decoration: line-through; margin-left: 5px;">${item.originalPrice.toLocaleString()} ₫</span>` : ''}
                                 </div>
                                 <button onclick="removeFromCart(${index})" class="remove-item-btn">Remove</button>
                             </div>
@@ -442,17 +509,15 @@ function openModal(type) {
                     <button onclick="openModal('CHECKOUT')" class="modal-btn">PROCEED TO CHECKOUT</button>
                 </div>
             </div>`;
-                    } else if (type === 'CHECKOUT') {
-        // 1. Kiểm tra giỏ hàng trống
+    } 
+    // 5. CHECKOUT
+    else if (type === 'CHECKOUT') {
         if(currentState.cart.length === 0) {
             showToast('Giỏ hàng của bạn đang trống.');
             return openModal('CART');
         }
-        
-        // 2. Tính tổng tiền
         const total = currentState.cart.reduce((sum, item) => sum + item.price, 0);
         
-        // 3. Render giao diện Checkout (Header đen giống Giỏ hàng)
         body.innerHTML = `
             <div style="display: flex; flex-direction: column; height: 100%;">
                 <div class="modal-header-cart">
@@ -467,7 +532,7 @@ function openModal(type) {
                             <h4 style="font-family: var(--font-serif); margin-bottom: 1rem; border-bottom: 2px solid #000; padding-bottom: 0.5rem;">1. Thông tin giao hàng</h4>
                             <div class="cx-form-group">
                                 <label class="cx-label">Họ và tên</label>
-                                <input type="text" id="cx-name" class="input-field" value="${currentState.user || ''}" placeholder="Nhập họ tên người nhận">
+                                <input type="text" id="cx-name" class="input-field" value="${currentState.user ? (currentState.user.name || '') : ''}" placeholder="Nhập họ tên người nhận">
                             </div>
                             <div class="cx-form-group">
                                 <label class="cx-label">Số điện thoại</label>
@@ -486,34 +551,16 @@ function openModal(type) {
                                 <div class="payment-option" onclick="selectPayment('zalopay', this)">
                                     <i class="fa-solid fa-qrcode"></i> Ví ZaloPay / QR Code
                                 </div>
-                                <div class="payment-option" onclick="selectPayment('bank', this)">
-                                    <i class="fa-solid fa-building-columns"></i> Chuyển khoản Ngân hàng
-                                </div>
                             </div>
 
                             <div id="payment-info-area">
                                 <div id="info-cod" class="payment-details show">
                                     <p style="font-size: 0.9rem; color: #666;">Bạn sẽ thanh toán bằng tiền mặt cho shipper khi nhận hàng.</p>
                                 </div>
-                                
                                 <div id="info-zalopay" class="payment-details">
                                     <p style="font-size: 0.9rem;">Mở ứng dụng ZaloPay và quét mã:</p>
                                     <div class="qr-wrapper">
                                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DemoZaloPay" class="qr-img"> 
-                                    </div>
-                                    <p class="bank-info" style="text-align:center">Nội dung: <strong>OOIA ${Date.now().toString().slice(-6)}</strong></p>
-                                </div>
-                                
-                                <div id="info-bank" class="payment-details">
-                                    <p style="font-size: 0.9rem;">Vui lòng chuyển khoản tới:</p>
-                                    <div class="qr-wrapper">
-                                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=DemoBankTransfer" class="qr-img">
-                                    </div>
-                                    <div class="bank-info">
-                                        <div><strong>Ngân hàng:</strong> TECHCOMBANK</div>
-                                        <div><strong>Số TK:</strong> 19039068928014</div>
-                                        <div><strong>Chủ TK:</strong> OOIA OFFICIAL</div>
-                                        <div><strong>Nội dung:</strong> OOIA ${Date.now().toString().slice(-6)}</div>
                                     </div>
                                 </div>
                             </div>
@@ -522,30 +569,17 @@ function openModal(type) {
                         <div>
                             <div class="order-summary-box">
                                 <h4 style="font-family: var(--font-serif); margin-bottom: 1rem;">Đơn hàng của bạn</h4>
-                                <div style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem; padding-right: 5px;">
+                                <div style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem;">
                                     ${currentState.cart.map(item => `
                                         <div class="summary-row">
-                                            <div style="flex:1">
-                                                <div style="font-weight:600; color:#000;">${item.name}</div>
-                                                <div style="font-size:0.8rem;">Size: ${item.size} x 1</div>
-                                            </div>
+                                            <span>${item.name} (${item.size})</span>
                                             <span>${item.price.toLocaleString()} ₫</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                                <div class="summary-row" style="border-top: 1px dashed #ddd; padding-top: 0.5rem;">
-                                    <span>Tạm tính</span>
-                                    <span>${total.toLocaleString()} ₫</span>
-                                </div>
-                                <div class="summary-row">
-                                    <span>Phí vận chuyển</span>
-                                    <span>Miễn phí</span>
+                                        </div>`).join('')}
                                 </div>
                                 <div class="summary-row total">
                                     <span>TỔNG CỘNG</span>
                                     <span>${total.toLocaleString()} ₫</span>
                                 </div>
-                                
                                 <button onclick="processOrder()" class="modal-btn" style="margin-top: 1.5rem;">ĐẶT HÀNG NGAY</button>
                                 <button onclick="openModal('CART')" class="back-cart-btn">Quay lại giỏ hàng</button>
                             </div>
@@ -553,12 +587,15 @@ function openModal(type) {
                     </div>
                 </div>
             </div>`;
-    
-    } else if (type === 'WISHLIST') {
+    } 
+    // 6. WISHLIST
+    else if (type === 'WISHLIST') {
         renderWishlistModal();
-    } else if (type === 'SIZE_SELECTION') {
+    } 
+    // 7. SIZE SELECTION
+    else if (type === 'SIZE_SELECTION') {
         const p = currentState.selectedProductForCart;
-        // Size Selection with restored table
+        if(!p) return;
         body.innerHTML = `
             <div class="modal-body-content">
                 <button onclick="closeModal()" class="close-modal-btn"><i class="fa-solid fa-xmark"></i></button>
@@ -567,16 +604,12 @@ function openModal(type) {
                     <img src="${p.image}" style="width: 6rem; height: 8rem; object-fit: cover;">
                     <div>
                         <h4 style="font-family: var(--font-serif); font-size: 1.2rem; margin-bottom: 0.5rem;">${p.name}</h4>
-                        <div>
-                            <span style="font-weight: 600; font-size: 1rem;" class="${p.originalPrice ? 'text-red' : 'color-gray'}">${p.price.toLocaleString()} ₫</span>
-                            ${p.originalPrice ? `<span style="font-size: 0.9rem; color: #999; text-decoration: line-through; margin-left: 5px;">${p.originalPrice.toLocaleString()} ₫</span>` : ''}
-                        </div>
+                        <span style="font-weight: 600; font-size: 1rem;">${p.price.toLocaleString()} ₫</span>
                     </div>
                 </div>
-                <div style="display: flex; gap: 10px; margin-bottom: 1rem;" id="size-options">
+                <div style="display: flex; gap: 10px; margin-bottom: 1rem;">
                     ${['S','M','L','XL'].map(s => `<button onclick="selectSize(this, '${s}')" class="size-btn">${s}</button>`).join('')}
                 </div>
-                
                 <div style="margin-bottom: 2rem;">
                     <button onclick="toggleSizeGuide()" class="guide-btn"><i class="fa-solid fa-ruler-horizontal"></i> Size Guide</button>
                     <div id="size-guide" class="size-table-wrap hidden">
@@ -591,7 +624,6 @@ function openModal(type) {
                         </table>
                     </div>
                 </div>
-
                 <button id="add-btn" disabled onclick="confirmAddToCart(this.dataset.size)" class="modal-btn">Add to Bag</button>
             </div>`;
     }
@@ -687,7 +719,7 @@ function selectPayment(method, element) {
 }
 
 async function processOrder() {
-    // ... (Validation logic giữ nguyên) ...
+  
 
     const orderData = {
         customer_name: document.getElementById('cx-name').value,
@@ -716,5 +748,90 @@ async function processOrder() {
         }
     } catch (error) {
         console.error('Lỗi kết nối server:', error);
+    }
+}
+// 1. XỬ LÝ ĐĂNG NHẬP
+async function handleLogin() {
+    const usernameInput = document.getElementById('login-username').value.trim();
+    const passwordInput = document.getElementById('login-password').value.trim();
+    const errorMsg = document.getElementById('auth-error');
+
+    if (!usernameInput || !passwordInput) {
+        if(errorMsg) errorMsg.innerText = "Vui lòng điền đầy đủ thông tin.";
+        return;
+    }
+
+    try {
+        // Gọi API Login 
+        const response = await fetch('http://localhost:3000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: usernameInput, 
+                password: passwordInput
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.success === false) {
+            if(errorMsg) errorMsg.innerText = data.message || "Đăng nhập thất bại.";
+            return;
+        }
+
+        // Đăng nhập thành công -> Lưu user vào localStorage
+        const userToSave = data.user || { email: usernameInput };
+        currentState.user = userToSave;
+        localStorage.setItem('matmat_user', JSON.stringify(userToSave)); // Key này phải khớp với lúc init state
+
+        showToast(`Xin chào, ${userToSave.name || userToSave.email}`);
+        updateNavbar();
+        closeModal();
+
+    } catch (err) {
+        console.error("Login Error:", err);
+        if(errorMsg) errorMsg.innerText = "Lỗi kết nối Server.";
+    }
+}
+
+// 2. XỬ LÝ ĐĂNG KÝ
+async function handleRegister() {
+    const username = document.getElementById('reg-username').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value.trim();
+    const errorMsg = document.getElementById('auth-error');
+
+    if (!username || !email || !password) {
+        if(errorMsg) errorMsg.innerText = "Vui lòng nhập đủ thông tin.";
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:3000/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.success === false) {
+            if(errorMsg) errorMsg.innerText = data.message || "Đăng ký thất bại.";
+            return;
+        }
+
+        // Đăng ký thành công
+        showToast("Đăng ký thành công! Hãy đăng nhập.");
+        openModal('LOGIN'); // Chuyển về form đăng nhập
+        
+        // Điền sẵn email cho tiện
+        setTimeout(() => {
+            const loginInput = document.getElementById('login-username');
+            if(loginInput) loginInput.value = email;
+        }, 100);
+
+    } catch (err) {
+        console.error("Register Error:", err);
+        if(errorMsg) errorMsg.innerText = "Lỗi kết nối Server.";
     }
 }
