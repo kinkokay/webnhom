@@ -3,7 +3,7 @@
 const HERO_SLIDES = [
     {
         id: 1, type: 'image',
-        src: 'https://assets.vogue.com/photos/6939ce24672674ea722296a1/16:9/w_1280%2Cc_limit/2doechii_1-ezgif.com-video-to-gif-converter%2520(1).gif',
+        src: './assets/shop_image/top_banner/shop_banner1.gif',
         title: "Essential<br><em>Elegance</em>", 
         subtitle: "WINTER / SPRING 2025", 
         btnText: "Discover",
@@ -12,7 +12,7 @@ const HERO_SLIDES = [
     },
     {
         id: 2, type: 'image',
-        src: 'https://assets.vogue.com/photos/68e58b7c8c5cb304e0c1028e/16:9/w_1920%2Cc_limit/PFW_SS26_streetstyle_day8_philoh_03.jpg',
+        src: './assets/shop_image/top_banner/shop_banner2.webp',
         title: "The Art of<br><em>Layering</em>", 
         subtitle: "MODERN SILHOUETTE", 
         btnText: "View Collection",
@@ -21,7 +21,7 @@ const HERO_SLIDES = [
     },
     {
         id: 3, type: 'image',
-        src: 'https://assets.vogue.com/photos/6941ccde1117f69e11df3276/master/w_1920,c_limit/121625_bestalbums2025_collage%20(1).jpg',
+        src: './assets/shop_image/top_banner/shop_banner3.webp',
         title: "Urban<br><em>Movement</em>", 
         subtitle: "NEW YORK CITY WALKERS", 
         btnText: "Shop Now",
@@ -30,7 +30,7 @@ const HERO_SLIDES = [
     },
     {
         id: 4, type: 'image',
-        src: 'https://www.prada.com/content/dam/pradaspa/home_page/2025/10/Holiday/pradasphere/Pradasphere_DT.jpg/_jcr_content/renditions/cq5dam.web.3360.3360.jpg',
+        src: './assets/shop_image/top_banner/shop_banner4.avif',
         title: "Modern<br><em>Classics</em>",
         subtitle: "OFFICE ESSENTIALS",
         btnText: "Shop Office",
@@ -39,39 +39,38 @@ const HERO_SLIDES = [
     }
 ];
 
-
 let ALL_PRODUCTS = [
-    { id: 1, name: "Áo 1", price: 1299000, image: "https://cdn.shopify.com/s/files/1/0123/5065/2473/files/CALIFORNIA_CASHMERE_V-NECK_DRESS_NAVY2.jpg?v=1709177309&format=webp&width=1800&height=1800", category: "Outerwear" },
-    { id: 2, name: "Áo 2", price: 799000, originalPrice: 999000, image: "https://www.jcrew.com/s7-img-facade/BI841_BL8133?hei=380&crop=0,0,304,0", tag: "Sale", category: "Knitwear" },
-    { id: 3, name: "Áo 3", price: 799000, image: "https://www.jcrew.com/s7-img-facade/CM298_SR7781?hei=380&crop=0,0,304,0", category: "Bottoms" },
-    { id: 4, name: "Áo 4", price: 499000, image: "https://www.jcrew.com/s7-img-facade/CM297_SR7307?hei=380&crop=0,0,304,0", category: "Shirts" },
-    { id: 5, name: "Áo 5", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO480_SR8417?hei=380&crop=0,0,304,0", category: "T-Shirts" },
-    { id: 6, name: "Quần 1", price: 999000, image: "https://www.jcrew.com/s7-img-facade/AR885_NA0111?hei=640&crop=0,0,512,0", tag: "New", category: "Jeans" },
-    { id: 7, name: "Áo 36", price: 1499000, image: "https://www.jcrew.com/s7-img-facade/CO474_BL5678?hei=380&crop=0,0,304,0", category: "Outerwear" },
-    { id: 8, name: "Áo 7", price: 299000, image: "https://www.jcrew.com/s7-img-facade/CO536_SR7721?hei=380&crop=0,0,304,0", category: "Accessories" },
-    { id: 9, name: "Áo 8", price: 599000, image: "https://www.jcrew.com/s7-img-facade/CO495_BL7398?hei=380&crop=0,0,304,0", category: "Knitwear" },
-    { id: 10, name: "Áo 9", price: 999000, image: "https://www.jcrew.com/s7-img-facade/BT793_NA6434?hei=380&crop=0,0,304,0", category: "Skirts" },
-    { id: 11, name: "Áo 10", price: 1699000, image: "https://www.jcrew.com/s7-img-facade/CM304_HT3002?hei=380&crop=0,0,304,0", category: "Outerwear" },
-    { id: 12, name: "Áo 18", price: 399000, image: "https://www.jcrew.com/s7-img-facade/CO535_SR8604?hei=380&crop=0,0,304,0", category: "Accessories" }
+    { id: 1, name: "Áo 1", price: 99000, originalPrice: 999000, image: "./assets/shop_image/products/row1/ao_MU.avif", tag: "Quý ông PHẢI CÓ",category: "Outerwear" },
+    { id: 2, name: "Áo 2", price: 399000, originalPrice: 599000, image: "./assets/shop_image/products/row1/ao2.avif", tag: "OOia", category: "Knitwear" },
+    { id: 3, name: "Áo 3", price: 399000, originalPrice: 599000, image: "./assets/shop_image/products/row1/ao3.avif", tag: "OOia", category: "Bottoms" },
+    { id: 4, name: "Áo 4", price: 499000, image: "./assets/shop_image/products/row1/ao4.webp", tag: "OOia", category: "Shirts" },
+    { id: 5, name: "Áo 5", price: 399000, originalPrice: 999000, image: "./assets/shop_image/products/row2/ao14.avif", tag: "OOia",category: "T-Shirts" },
+    { id: 6, name: "Áo 6", price: 980000, originalPrice: 999000, image: "./assets/shop_image/products/row2/ao12.avif", tag: "OOia", category: "Jeans" },
+    { id: 7, name: "Áo 36", price: 666666, originalPrice: 3600000, image: "./assets/shop_image/products/row2/ao_JU.jpg",tag: "Vô địch tầm giá", category: "Outerwear" },
+    { id: 8, name: "Áo 7", price: 299000,  originalPrice: 499000, image: "./assets/shop_image/products/row2/ao13.avif", tag: "OOia", category: "Accessories" },
+    { id: 9, name: "Áo 8", price: 599000,  originalPrice: 699000, image: "./assets/shop_image/products/row3/ao8.avif",tag: "OOia", category: "Outerwear" },
+    { id: 10, name: "Quarter zip", price: 10000,  originalPrice: 1000000, image: "./assets/shop_image/products/row3/ao9.avif", tag: "Matcha boy", category: "Skirts" },
+    { id: 11, name: "Áo 9", price: 699000,  originalPrice: 700000, image: "./assets/shop_image/products/row3/ao10.avif", tag: "OOia",  category: "Outerwear" },
+    { id: 12, name: "Tê con 6 sao", price: 1800000, originalPrice: 3600000,image: "./assets/shop_image/products/row3/T1.png", tag: "Tê Oăn", category: "Accessories" }
 ];
 
 let CATEGORY_SECTIONS = [
-     {
+    {
         id: "cat_1", title: "Outerwear",
         description: "Bảo vệ bạn khỏi các yếu tố thời tiết nhưng vẫn giữ được vẻ thanh lịch. Các thiết kế áo khoác của chúng tôi tập trung vào phom dáng kiến trúc và chất liệu bền vững.",
-        bannerImage: "https://www.lofficielph.com/_next/image?url=https%3A%2F%2Fwww.datocms-assets.com%2F42755%2F1758715785-women_250719_lv_s10_052_b_lvcom_1920x1080_animation.jpg%3Fauto%3Dformat%252Ccompress%26cs%3Dsrgb&w=3840&q=75",
+        bannerImage: "./assets/shop_image/base_banner/base_banner1.webp",
         products: ALL_PRODUCTS.slice(0, 4)
     },
     {
         id: "cat_2", title: "Casual",
         description: "Sự sang trọng thầm lặng cho ngày thường. Chất liệu cotton Ai Cập và Linen thoáng khí mang lại cảm giác nhẹ nhàng tựa như không.",
-        bannerImage: "https://im.uniqlo.com/global-cms/spa/resb3c2de9e8b169740c7f2ca991039164cfr.jpg",
+        bannerImage: "./assets/shop_image/base_banner/base_banner2.jpg",
         products: ALL_PRODUCTS.slice(4, 8)
     },
     {
         id: "cat_3", title: "Office",
         description: "Định nghĩa lại trang phục công sở hiện đại. Những đường cắt sắc sảo, tối giản chi tiết thừa để tôn vinh sự chuyên nghiệp.",
-        bannerImage: "https://www.highsnobiety.com/static-assets/dato/1637753760-210909edtentwfw21nycpeterdomikeseegars18.jpg?fp-x=0.5&fp-y=0.5&fit=crop&auto=compress%2Cformat&cs=srgb&ar=1200%3A800&w=1200",
+        bannerImage: "./assets/shop_image/base_banner/base_banner3.jpg",
         products: ALL_PRODUCTS.slice(8, 12)
     }
 ];
