@@ -13,6 +13,8 @@ app.use(cors()); // Cho phép mọi nguồn truy cập (Dev mode)
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'ooia-frontend')));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
 // --- ROUTES (API) ---
 
 // 1. Lấy danh sách Categories
