@@ -146,11 +146,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 async function fetchProducts() {
     try {
         // 1. Gọi API Categories
-        const catRes = await fetch('http://localhost:3000/api/categories');
+        const catRes = await fetch('/api/categories');
         const categories = await catRes.json();
 
         // 2. Gọi API Products
-        const prodRes = await fetch('http://localhost:3000/api/products');
+        const prodRes = await fetch('/api/products');
         ALL_PRODUCTS = await prodRes.json(); // Cập nhật biến toàn cục
 
         // 3. Map dữ liệu để khớp với logic render cũ
@@ -730,7 +730,7 @@ async function processOrder() {
     };
 
     try {
-        const response = await fetch('http://localhost:3000/api/orders', {
+        const response = await fetch('/api/orders', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
@@ -763,7 +763,7 @@ async function handleLogin() {
 
     try {
         // Gọi API Login 
-        const response = await fetch('http://localhost:3000/api/login', {
+        const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -807,7 +807,7 @@ async function handleRegister() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/register', {
+        const response = await fetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password })
