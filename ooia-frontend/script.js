@@ -2,7 +2,7 @@
 const HERO_SLIDES = [
     {
         id: 1, type: 'image',
-        src: './assets/shop_image/top_banner/shop_banner1.gif',
+        src: '/assets/shop_image/top_banner/shop_banner1.gif',
         title: "Essential<br><em>Elegance</em>", 
         subtitle: "WINTER / SPRING 2025", 
         btnText: "Discover",
@@ -11,7 +11,7 @@ const HERO_SLIDES = [
     },
     {
         id: 2, type: 'image',
-        src: './assets/shop_image/top_banner/shop_banner2.webp',
+        src: '/assets/shop_image/top_banner/shop_banner2.webp',
         title: "The Art of<br><em>Layering</em>", 
         subtitle: "MODERN SILHOUETTE", 
         btnText: "View Collection",
@@ -20,7 +20,7 @@ const HERO_SLIDES = [
     },
     {
         id: 3, type: 'image',
-        src: './assets/shop_image/top_banner/shop_banner3.webp',
+        src: '/assets/shop_image/top_banner/shop_banner3.webp',
         title: "Urban<br><em>Movement</em>", 
         subtitle: "NEW YORK CITY WALKERS", 
         btnText: "Shop Now",
@@ -29,7 +29,7 @@ const HERO_SLIDES = [
     },
     {
         id: 4, type: 'image',
-        src: './assets/shop_image/top_banner/shop_banner4.avif',
+        src: '/assets/shop_image/top_banner/shop_banner4.avif',
         title: "Modern<br><em>Classics</em>",
         subtitle: "OFFICE ESSENTIALS",
         btnText: "Shop Office",
@@ -38,39 +38,38 @@ const HERO_SLIDES = [
     }
 ];
 
-// Reverted to Original Vietnamese Names
 let ALL_PRODUCTS = [
-    { id: 1, name: "Áo 1", price: 99000, originalPrice: 999000, image: "./assets/shop_image/products/row1/ao_MU.avif", tag: "Quý ông PHẢI CÓ",category: "Outerwear" },
-    { id: 2, name: "Áo 2", price: 399000, originalPrice: 599000, image: "./assets/shop_image/products/row1/ao2.avif", tag: "OOia", category: "Knitwear" },
-    { id: 3, name: "Áo 3", price: 399000, originalPrice: 599000, image: "./assets/shop_image/products/row1/ao3.avif", tag: "OOia", category: "Bottoms" },
-    { id: 4, name: "Áo 4", price: 499000, image: "./assets/shop_image/products/row1/ao4.webp", tag: "OOia", category: "Shirts" },
-    { id: 5, name: "Áo 5", price: 399000, originalPrice: 999000, image: "./assets/shop_image/products/row2/ao14.avif", tag: "OOia",category: "T-Shirts" },
-    { id: 6, name: "Áo 6", price: 980000, originalPrice: 999000, image: "./assets/shop_image/products/row2/ao12.avif", tag: "OOia", category: "Jeans" },
-    { id: 7, name: "Áo 36", price: 666666, originalPrice: 3600000, image: "./assets/shop_image/products/row2/ao_JU.jpg",tag: "Vô địch tầm giá", category: "Outerwear" },
-    { id: 8, name: "Áo 7", price: 299000,  originalPrice: 499000, image: "./assets/shop_image/products/row2/ao13.avif", tag: "OOia", category: "Accessories" },
-    { id: 9, name: "Áo 8", price: 599000,  originalPrice: 699000, image: "./assets/shop_image/products/row3/ao8.avif",tag: "OOia", category: "Outerwear" },
+    { id: 1, name: "Áo 1", price: 99000, originalPrice: 999000, image: "/assets/shop_image/products/row1/ao_MU.avif", tag: "Quý ông PHẢI CÓ",category: "Outerwear" },
+    { id: 2, name: "Áo 2", price: 399000, originalPrice: 599000, image: "/assets/shop_image/products/row1/ao2.avif", tag: "OOia", category: "Knitwear" },
+    { id: 3, name: "Áo 3", price: 399000, originalPrice: 599000, image: "/assets/shop_image/products/row1/ao3.avif", tag: "OOia", category: "Bottoms" },
+    { id: 4, name: "Áo 4", price: 499000, image: "/assets/shop_image/products/row1/ao4.webp", tag: "OOia", category: "Shirts" },
+    { id: 5, name: "Áo 5", price: 399000, originalPrice: 999000, image: "/assets/shop_image/products/row2/ao14.avif", tag: "OOia",category: "T-Shirts" },
+    { id: 6, name: "Áo 6", price: 980000, originalPrice: 999000, image: "/assets/shop_image/products/row2/ao12.avif", tag: "OOia", category: "Jeans" },
+    { id: 7, name: "Áo 36", price: 666666, originalPrice: 3600000, image: "/assets/shop_image/products/row2/ao_JU.jpg",tag: "Vô địch tầm giá", category: "Outerwear" },
+    { id: 8, name: "Áo 7", price: 299000,  originalPrice: 499000, image: "/assets/shop_image/products/row2/ao13.avif", tag: "OOia", category: "Accessories" },
+    { id: 9, name: "Áo 8", price: 599000,  originalPrice: 699000, image: "/assets/shop_image/products/row3/ao8.avif",tag: "OOia", category: "Outerwear" },
     { id: 10, name: "Quarter zip", price: 10000,  originalPrice: 1000000, image: "./assets/shop_image/products/row3/ao9.avif", tag: "Matcha boy", category: "Skirts" },
-    { id: 11, name: "Áo 9", price: 699000,  originalPrice: 700000, image: "./assets/shop_image/products/row3/ao10.avif", tag: "OOia",  category: "Outerwear" },
-    { id: 12, name: "Tê con 6 sao", price: 1800000, originalPrice: 3600000,image: "./assets/shop_image/products/row3/T1.png", tag: "Tê Oăn", category: "Accessories" }
+    { id: 11, name: "Áo 9", price: 699000,  originalPrice: 700000, image: "/assets/shop_image/products/row3/ao10.avif", tag: "OOia",  category: "Outerwear" },
+    { id: 12, name: "Tê con 6 sao", price: 1800000, originalPrice: 3600000,image: "/assets/shop_image/products/row3/T1.png", tag: "Tê Oăn", category: "Accessories" }
 ];
 
 let CATEGORY_SECTIONS = [
     {
         id: "cat_1", title: "Outerwear",
         description: "Bảo vệ bạn khỏi các yếu tố thời tiết nhưng vẫn giữ được vẻ thanh lịch. Các thiết kế áo khoác của chúng tôi tập trung vào phom dáng kiến trúc và chất liệu bền vững.",
-        bannerImage: "./assets/shop_image/base_banner/base_banner1.webp",
+        bannerImage: "/assets/shop_image/base_banner/base_banner1.webp",
         products: ALL_PRODUCTS.slice(0, 4)
     },
     {
         id: "cat_2", title: "Casual",
         description: "Sự sang trọng thầm lặng cho ngày thường. Chất liệu cotton Ai Cập và Linen thoáng khí mang lại cảm giác nhẹ nhàng tựa như không.",
-        bannerImage: "./assets/shop_image/base_banner/base_banner2.jpg",
+        bannerImage: "/assets/shop_image/base_banner/base_banner2.jpg",
         products: ALL_PRODUCTS.slice(4, 8)
     },
     {
         id: "cat_3", title: "Office",
         description: "Định nghĩa lại trang phục công sở hiện đại. Những đường cắt sắc sảo, tối giản chi tiết thừa để tôn vinh sự chuyên nghiệp.",
-        bannerImage: "./assets/shop_image/base_banner/base_banner3.jpg",
+        bannerImage: "/assets/shop_image/base_banner/base_banner3.jpg",
         products: ALL_PRODUCTS.slice(8, 12)
     }
 ];
