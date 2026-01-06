@@ -718,12 +718,41 @@ function selectPayment(method, element) {
 }
 
 async function processOrder() {
-  
+    const nameInput = document.getElementById('cx-name');
+    const phoneInput = document.getElementById('cx-phone');
+    const addressInput = document.getElementById('cx-address');
+
+    // 1. Validate Họ tên
+    if (!nameInput.value.trim()) {
+        showToast('Vui lòng nhập họ tên người nhận!');
+        nameInput.focus();
+        return;
+    }
+
+    // 2. Validate Số điện thoại
+    const phone = phoneInput.value.trim();
+    if (!phone) {
+        showToast('Vui lòng nhập số điện thoại!');
+        phoneInput.focus();
+        return;
+    }
+    if (!isValidPhone(phone)) {
+        showToast('Số điện thoại không hợp lệ (VD: 0912345678)!');
+        phoneInput.focus();
+        return;
+    }
+
+    // 3. Validate Địa chỉ
+    if (!addressInput.value.trim()) {
+        showToast('Vui lòng nhập địa chỉ giao hàng!');
+        addressInput.focus();
+        return;
+    }
 
     const orderData = {
-        customer_name: document.getElementById('cx-name').value,
-        customer_phone: document.getElementById('cx-phone').value,
-        shipping_address: document.getElementById('cx-address').value,
+        customer_name: nameInput.value,
+        customer_phone: phone,
+        shipping_address: addressInput.value,
         cart: currentState.cart,
         total_amount: currentState.cart.reduce((sum, item) => sum + item.price, 0)
     };
@@ -738,17 +767,19 @@ async function processOrder() {
         const result = await response.json();
         
         if (response.ok) {
-            alert(`Đặt hàng thành công! Mã đơn: ${result.orderId}`);
+            showToast(`Đặt hàng thành công! Mã đơn: ${result.orderId}`);
             currentState.cart = [];
             updateNavbar();
             closeModal();
         } else {
-            alert('Lỗi: ' + result.error);
+            showToast('Lỗi: ' + result.error);
         }
     } catch (error) {
         console.error('Lỗi kết nối server:', error);
+        showToast('Không thể kết nối đến máy chủ.');
     }
 }
+
 // 1. XỬ LÝ ĐĂNG NHẬP
 async function handleLogin() {
     const usernameInput = document.getElementById('login-username').value.trim();
@@ -790,10 +821,11 @@ async function handleLogin() {
         const data = await response.json();
 
         if (!response.ok) {
-            showToast(data.message || "Đăng nhập thất bại.");
+            showToast(data.message);
             return;
         }
 
+        // Đăng nhập thành công
         const userToSave = data.user || { email: email };
         currentState.user = userToSave;
         localStorage.setItem('matmat_user', JSON.stringify(userToSave));
@@ -860,8 +892,14 @@ async function handleRegister() {
         showToast("Lỗi kết nối Server.");
     }
 }
-
+//Kiểm tra email
 function isValidEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
+}
+
+function isValidPhone(phone) {
+    // Kiểm tra số điện thoại Việt Nam (bắt đầu bằng 0, theo sau là 9 chữ số)
+    const re = /(0[3|5|7|8|9])+([0-9]{8})\b/g;
+    return re.test(phone);
 }

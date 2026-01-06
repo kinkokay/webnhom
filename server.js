@@ -73,18 +73,23 @@ app.post('/api/register', async (req, res) => {
 });
 
 
-// 4. Đăng nhập (Đơn giản)
+// 4. Đăng nhập 
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     try {
         const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
         
+        // Kiểm tra Email tồn tại
         if (users.length === 0) {
-            return res.status(401).json({ message: 'User not found' });
+            return res.status(401).json({ 
+                success: false, 
+                message: 'Email không tồn tại trong hệ thống!' 
+            });
         }
 
         const user = users[0];
-
+        
+        // Kiểm tra Mật khẩu
         if (password === user.password_hash) { 
              // Trả về thông tin user (trừ password)
             res.json({ 
@@ -95,7 +100,11 @@ app.post('/api/login', async (req, res) => {
                 full_name: user.full_name }
             });
         } else {
-            res.status(401).json({ message: 'Incorrect password' });
+            // Sai mật khẩu
+            res.status(401).json({  
+                success: false, 
+                message: 'Mật khẩu không chính xác. Vui lòng thử lại!' 
+            });
         }
     } catch (err) {
         res.status(500).json({ error: err.message });
