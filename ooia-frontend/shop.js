@@ -150,22 +150,35 @@ async function fetchProducts() {
 
         // 2. Gọi API Products
         const prodRes = await fetch('/api/products');
-        ALL_PRODUCTS = rawProducts.map(p => ({
-            ...p, 
-            originalPrice: p.original_price, // Dòng quan trọng nhất để hiện giá giảm
-        }));
+        let rawProducts = await prodRes.json(); 
 
-        // 3. Map dữ liệu để khớp với logic render cũ
+        // 3. Map dữ liệu (SỬA Ở ĐÂY)
+        ALL_PRODUCTS = rawProducts.map(p => {
+            // Bước 1: Tìm xem cột ảnh trong DB tên là gì (thử các trường hợp phổ biến)
+            // Nếu bạn biết chính xác tên cột (ví dụ image_url), hãy sửa trực tiếp vào đây
+            let dbImage = p.image || p.image_url || p.img || p.thumbnail || "";
+
+            return {
+                ...p, 
+                // Map lại giá gốc để hiện màu đỏ
+                originalPrice: p.original_price, 
+                // Map lại category
+                category: p.category_name,
+                // QUAN TRỌNG NHẤT: Gán cột ảnh từ DB vào biến 'image' chuẩn của web
+                image: dbImage 
+            };
+        });
+
+        // 4. Chia sản phẩm vào các Section (Code cũ)
         CATEGORY_SECTIONS = categories.map(cat => ({
             id: `cat_${cat.id}`,
             title: cat.name,
             description: cat.description,
             bannerImage: cat.banner_image,
-            // Lọc sản phẩm thuộc category này
             products: ALL_PRODUCTS.filter(p => p.category_id === cat.id).slice(0, 4)
         }));
 
-        renderCategories(); // Gọi hàm render sau khi có đủ dữ liệu
+        renderCategories(); 
     } catch (error) {
         console.error("Lỗi tải dữ liệu:", error);
     }
