@@ -39,7 +39,7 @@ const HERO_SLIDES = [
     }
 ];
 
-const ALL_PRODUCTS = [
+let ALL_PRODUCTS = [
     { id: 1, name: "Áo 1", price: 99000, originalPrice: 999000, image: "./assets/shop_image/products/row1/ao_MU.avif", tag: "Quý ông PHẢI CÓ",category: "Outerwear" },
     { id: 2, name: "Áo 2", price: 399000, originalPrice: 599000, image: "./assets/shop_image/products/row1/ao2.avif", tag: "OOia", category: "Knitwear" },
     { id: 3, name: "Áo 3", price: 399000, originalPrice: 599000, image: "./assets/shop_image/products/row1/ao3.avif", tag: "OOia", category: "Bottoms" },
@@ -54,7 +54,7 @@ const ALL_PRODUCTS = [
     { id: 12, name: "Tê con 6 sao", price: 1800000, originalPrice: 3600000,image: "./assets/shop_image/products/row3/T1.png", tag: "Tê Oăn", category: "Accessories" }
 ];
 
-const CATEGORY_SECTIONS = [
+let CATEGORY_SECTIONS = [
     {
         id: "cat_1", title: "Outerwear",
         description: "Bảo vệ bạn khỏi các yếu tố thời tiết nhưng vẫn giữ được vẻ thanh lịch. Các thiết kế áo khoác của chúng tôi tập trung vào phom dáng kiến trúc và chất liệu bền vững.",
@@ -753,55 +753,84 @@ async function processOrder() {
 async function handleLogin() {
     const usernameInput = document.getElementById('login-username').value.trim();
     const passwordInput = document.getElementById('login-password').value.trim();
-    const errorMsg = document.getElementById('auth-error');
+    const email = usernameInput.value.trim();
+    const pass = passwordInput.value.trim()
 
-    if (!usernameInput || !passwordInput) {
-        if(errorMsg) errorMsg.innerText = "Vui lòng điền đầy đủ thông tin.";
+   // 1. Validate Email/Tên đăng nhập
+    if (!email) {
+        showToast('Vui lòng nhập Email đăng nhập!');
+        usernameInput.focus();
+        return;
+    }
+    if (!isValidEmail(email)) {
+        showToast('Định dạng Email không hợp lệ!');
+        usernameInput.focus();
+        return;
+    }
+
+    // 2. Validate Mật khẩu
+    if (!pass) {
+        showToast('Vui lòng nhập Mật khẩu!');
+        passwordInput.focus();
+        return;
+    }
+    if (pass.length < 6) {
+        showToast('Mật khẩu phải có ít nhất 6 ký tự!');
+        passwordInput.focus();
         return;
     }
 
     try {
-        // Gọi API Login 
         const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: usernameInput, 
-                password: passwordInput
-            })
+            body: JSON.stringify({ email: email, password: pass })
         });
 
         const data = await response.json();
 
-        if (!response.ok || data.success === false) {
-            if(errorMsg) errorMsg.innerText = data.message || "Đăng nhập thất bại.";
+        if (!response.ok) {
+            showToast(data.message || "Đăng nhập thất bại.");
             return;
         }
 
-        // Đăng nhập thành công -> Lưu user vào localStorage
-        const userToSave = data.user || { email: usernameInput };
+        const userToSave = data.user || { email: email };
         currentState.user = userToSave;
-        localStorage.setItem('matmat_user', JSON.stringify(userToSave)); // Key này phải khớp với lúc init state
+        localStorage.setItem('matmat_user', JSON.stringify(userToSave));
 
-        showToast(`Xin chào, ${userToSave.name || userToSave.email}`);
+        showToast(`Chào mừng trở lại, ${userToSave.full_name || userToSave.email}`);
         updateNavbar();
         closeModal();
 
     } catch (err) {
         console.error("Login Error:", err);
-        if(errorMsg) errorMsg.innerText = "Lỗi kết nối Server.";
+        showToast("Lỗi kết nối Server.");
     }
 }
 
 // 2. XỬ LÝ ĐĂNG KÝ
 async function handleRegister() {
-    const username = document.getElementById('reg-username').value.trim();
-    const email = document.getElementById('reg-email').value.trim();
-    const password = document.getElementById('reg-password').value.trim();
-    const errorMsg = document.getElementById('auth-error');
+    const nameInput = document.getElementById('reg-username');
+    const emailInput = document.getElementById('reg-email');
+    const passInput = document.getElementById('reg-password');
+    
+    const username = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passInput.value.trim();
 
-    if (!username || !email || !password) {
-        if(errorMsg) errorMsg.innerText = "Vui lòng nhập đủ thông tin.";
+    if (!username) {
+        showToast('Vui lòng nhập Tên hiển thị!');
+        nameInput.focus();
+        return;
+    }
+    if (!isValidEmail(email)) {
+        showToast('Email không đúng định dạng!');
+        emailInput.focus();
+        return;
+    }
+    if (password.length < 6) {
+        showToast('Mật khẩu đăng ký phải từ 6 ký tự!');
+        passInput.focus();
         return;
     }
 
@@ -814,23 +843,25 @@ async function handleRegister() {
 
         const data = await response.json();
 
-        if (!response.ok || data.success === false) {
-            if(errorMsg) errorMsg.innerText = data.message || "Đăng ký thất bại.";
+        if (!response.ok) {
+            showToast(data.message || "Đăng ký thất bại.");
             return;
         }
 
-        // Đăng ký thành công
         showToast("Đăng ký thành công! Hãy đăng nhập.");
-        openModal('LOGIN'); // Chuyển về form đăng nhập
+        openModal('LOGIN'); 
         
-        // Điền sẵn email cho tiện
         setTimeout(() => {
             const loginInput = document.getElementById('login-username');
             if(loginInput) loginInput.value = email;
         }, 100);
 
     } catch (err) {
-        console.error("Register Error:", err);
-        if(errorMsg) errorMsg.innerText = "Lỗi kết nối Server.";
+        showToast("Lỗi kết nối Server.");
     }
+}
+
+function isValidEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
 }
