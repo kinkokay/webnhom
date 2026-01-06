@@ -230,7 +230,7 @@ function renderProductCard(product) {
     return `
         <div class="product-card" id="p-card-${product.id}">
             <div class="p-img-box">
-                <img src="${product.image}" class="p-img" alt="${product.name}">
+                <img src="${product.image_url}" class="p-img" alt="${product.name}">
                 ${product.tag ? `<span class="p-tag">${product.tag}</span>` : ''}
                 <button onclick="initAddToCart(${product.id})" class="add-cart-btn">Add to Cart</button>
             </div>
