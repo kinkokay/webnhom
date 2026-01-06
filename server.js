@@ -5,10 +5,8 @@ const path = require('path');
 const db = require('./ooia-backend/db');
 require('dotenv').config();
 
-const express = require('express');
 const app = express();
-
-app.use('/assets', express.static('assets'));
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors()); // Cho phép mọi nguồn truy cập (Dev mode)
