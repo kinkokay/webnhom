@@ -150,7 +150,10 @@ async function fetchProducts() {
 
         // 2. Gọi API Products
         const prodRes = await fetch('/api/products');
-        ALL_PRODUCTS = await prodRes.json(); // Cập nhật biến toàn cục
+        ALL_PRODUCTS = rawProducts.map(p => ({
+            ...p, 
+            originalPrice: p.original_price, // Dòng quan trọng nhất để hiện giá giảm
+        }));
 
         // 3. Map dữ liệu để khớp với logic render cũ
         CATEGORY_SECTIONS = categories.map(cat => ({
