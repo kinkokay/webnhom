@@ -48,7 +48,7 @@ let ALL_PRODUCTS = [
     { id: 7, name: "Áo 36", price: 666666, originalPrice: 3600000, image: "/assets/shop_image/products/row2/ao_JU.jpg",tag: "Vô địch tầm giá", category: "Outerwear" },
     { id: 8, name: "Áo 7", price: 299000,  originalPrice: 499000, image: "/assets/shop_image/products/row2/ao13.avif", tag: "OOia", category: "Accessories" },
     { id: 9, name: "Áo 8", price: 599000,  originalPrice: 699000, image: "/assets/shop_image/products/row3/ao8.avif",tag: "OOia", category: "Outerwear" },
-    { id: 10, name: "Quarter zip", price: 10000,  originalPrice: 1000000, image: "./assets/shop_image/products/row3/ao9.avif", tag: "Matcha boy", category: "Skirts" },
+    { id: 10, name: "Quarter zip", price: 10000,  originalPrice: 1000000, image: "/assets/shop_image/products/row3/ao9.avif", tag: "Matcha boy", category: "Skirts" },
     { id: 11, name: "Áo 9", price: 699000,  originalPrice: 700000, image: "/assets/shop_image/products/row3/ao10.avif", tag: "OOia",  category: "Outerwear" },
     { id: 12, name: "Tê con 6 sao", price: 1800000, originalPrice: 3600000,image: "/assets/shop_image/products/row3/T1.png", tag: "Tê Oăn", category: "Accessories" }
 ];
