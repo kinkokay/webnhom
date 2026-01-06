@@ -152,10 +152,9 @@ async function fetchProducts() {
         const prodRes = await fetch('/api/products');
         let rawProducts = await prodRes.json(); 
 
-        // 3. Map dữ liệu (SỬA Ở ĐÂY)
+        // 3. Map dữ liệu
         ALL_PRODUCTS = rawProducts.map(p => {
-            // Bước 1: Tìm xem cột ảnh trong DB tên là gì (thử các trường hợp phổ biến)
-            // Nếu bạn biết chính xác tên cột (ví dụ image_url), hãy sửa trực tiếp vào đây
+            // Tìm xem cột ảnh trong DB tên là gì (thử các trường hợp phổ biến)
             let dbImage = p.image || p.image_url || p.img || p.thumbnail || "";
 
             return {
@@ -164,12 +163,12 @@ async function fetchProducts() {
                 originalPrice: p.original_price, 
                 // Map lại category
                 category: p.category_name,
-                // QUAN TRỌNG NHẤT: Gán cột ảnh từ DB vào biến 'image' chuẩn của web
+                // Gán cột ảnh từ DB vào biến 'image' chuẩn của web
                 image: dbImage 
             };
         });
 
-        // 4. Chia sản phẩm vào các Section (Code cũ)
+        // 4. Chia sản phẩm vào các Section 
         CATEGORY_SECTIONS = categories.map(cat => ({
             id: `cat_${cat.id}`,
             title: cat.name,
@@ -402,14 +401,28 @@ function performSearch(query) {
 }
 
 function subscribeNewsletter() {
-    const email = document.getElementById('cs-email').value;
-    if(email) {
-        showToast('Thank you for subscribing!');
-        document.getElementById('cs-email').value = '';
-    } else {
-        showToast('Please enter your email.');
+    const emailInput = document.getElementById('cs-email');
+    const email = emailInput.value.trim(); //Xóa khoảng trắng thừa
+
+    // Kiểm tra rỗng
+    if (!email) {
+        showToast('Vui lòng nhập địa chỉ Email!');
+        emailInput.focus();
+        return;
     }
+
+    // Kiểm tra định dạng Email
+    if (!isValidEmail(email)) {
+        showToast('Email không hợp lệ! (Ví dụ: abc@gmail.com)');
+        emailInput.focus();
+        return;
+    }
+
+    //Thành công
+    showToast('Cảm ơn bạn đã đăng ký!');
+    emailInput.value = '';
 }
+
 
 // --- LOGIC: MODALS ---
 function openModal(type) {
