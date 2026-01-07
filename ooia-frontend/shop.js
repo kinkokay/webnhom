@@ -159,8 +159,11 @@ async function fetchProducts() {
 
             return {
                 ...p, 
+                id: p.id,
+                name: p.name,
                 // Map lại giá gốc để hiện màu đỏ
-                originalPrice: p.original_price, 
+                price: Number(p.price),
+                originalPrice: p.original_price ? Number(p.original_price) : null, 
                 // Map lại category
                 category: p.category_name,
                 // Gán cột ảnh từ DB vào biến 'image' chuẩn của web
