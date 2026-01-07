@@ -219,3 +219,22 @@ app.delete('/api/cart', async (req, res) => {
 app.get('/api/wishlist/:userId', async (req, res) => { /* Code SELECT JOIN products */ });
 app.post('/api/wishlist', async (req, res) => { /* Code INSERT */ });
 app.delete('/api/wishlist', async (req, res) => { /* Code DELETE */ });
+
+// Trong server.js
+app.get('/api/cart/:userId', async (req, res) => {
+    try {
+        // PHẢI CÓ: JOIN products p ON ...
+        // Để lấy được p.image_url, p.name, p.price
+        const sql = `
+            SELECT c.id as cart_item_id, c.quantity, c.size, c.product_id, 
+                   p.name, p.price, p.image_url, p.original_price
+            FROM cart_items c
+            JOIN products p ON c.product_id = p.id
+            WHERE c.user_id = ?`;
+            
+        const [rows] = await db.query(sql, [req.params.userId]);
+        res.json(rows);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});

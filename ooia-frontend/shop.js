@@ -1022,15 +1022,39 @@ function isValidPhone(phone) {
 
 async function syncCartFromDB() {
     if (!currentState.user) return;
-    
+
     try {
         const res = await fetch(`/api/cart/${currentState.user.id}`);
+        if (!res.ok) throw new Error('Lỗi tải giỏ hàng');
+
         const dbCart = await res.json();
         
-        // Cập nhật State
-        currentState.cart = dbCart;
+        // --- SỬA Ở ĐÂY: MAP DỮ LIỆU ---
+        // Biến đổi dữ liệu từ DB (snake_case) sang chuẩn Frontend (camelCase)
+        currentState.cart = dbCart.map(item => ({
+            ...item,
+            // 1. Map lại ID: Frontend cần 'id' là id sản phẩm
+            id: item.product_id || item.id, 
+            
+            // 2. Map lại Ảnh: Frontend cần 'image', DB trả về 'image_url'
+            image: item.image || item.image_url || "", 
+            
+            // 3. Map lại Giá: Đảm bảo là số (Number)
+            price: Number(item.price),
+            originalPrice: item.original_price ? Number(item.original_price) : null,
+            
+            // 4. Giữ nguyên size và quantity
+            size: item.size,
+            quantity: item.quantity,
+            
+            // 5. Lưu thêm ID dòng trong giỏ hàng (để xóa chính xác nếu cần sau này)
+            cart_item_id: item.cart_item_id 
+        }));
+        // -----------------------------
+        
         updateNavbar();
+
     } catch (err) {
-        console.error("Lỗi lấy giỏ hàng:", err);
+        console.error("Lỗi đồng bộ giỏ hàng:", err);
     }
 }
