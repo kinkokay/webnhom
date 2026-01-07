@@ -341,17 +341,40 @@ function initAddToCart(id) {
     openModal('SIZE_SELECTION');
 }
 
-function confirmAddToCart(size) {
+async function confirmAddToCart(size) {
     if(!currentState.selectedProductForCart) return;
     const priceAsNumber = Number(currentState.selectedProductForCart.price);
-    const item = { ...currentState.selectedProductForCart, size, quantity: 1 };
-    currentState.cart.push(item);
-    localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
-    showToast(`Added ${item.name} (${size}) to Cart`);
+    
+// --- LOGIC MỚI: CHECK USER ---
+    if (currentState.user) {
+        // A. ĐÃ ĐĂNG NHẬP -> GỌI API
+        try {
+            await fetch('/api/cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: currentState.user.id,
+                    product_id: product.id,
+                    size: size,
+                    quantity: 1
+                })
+            });
+            // Sau khi thêm DB thành công, cần tải lại giỏ hàng mới nhất từ DB
+            await syncCartFromDB(); 
+        } catch (err) {
+            console.error(err);
+        }
+    } else {
+        // B. CHƯA ĐĂNG NHẬP -> DÙNG LOCAL STORAGE (Code cũ của bạn)
+        const item = { ...product, size, quantity: 1 };
+        currentState.cart.push(item);
+        localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
+    }
+
+    showToast(`Added to Cart`);
     updateNavbar();
     closeModal();
 }
-
 function removeFromCart(index) {
     currentState.cart.splice(index, 1);
     localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
@@ -869,6 +892,7 @@ async function handleLogin() {
         localStorage.setItem('matmat_user', JSON.stringify(userToSave));
 
         showToast(`Chào mừng trở lại, ${userToSave.full_name || userToSave.email}`);
+        await syncCartFromDB();
         updateNavbar();
         closeModal();
 
@@ -940,4 +964,19 @@ function isValidPhone(phone) {
     // Kiểm tra số điện thoại Việt Nam (bắt đầu bằng 0, theo sau là 9 chữ số)
     const re = /(0[3|5|7|8|9])+([0-9]{8})\b/g;
     return re.test(phone);
+}
+
+async function syncCartFromDB() {
+    if (!currentState.user) return;
+    
+    try {
+        const res = await fetch(`/api/cart/${currentState.user.id}`);
+        const dbCart = await res.json();
+        
+        // Cập nhật State
+        currentState.cart = dbCart;
+        updateNavbar();
+    } catch (err) {
+        console.error("Lỗi lấy giỏ hàng:", err);
+    }
 }

@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors()); // Cho phép mọi nguồn truy cập (Dev mode)
+app.use(cors()); // Cho phép mọi nguồn truy cập
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'ooia-frontend')));
@@ -163,3 +163,59 @@ app.get('/shop', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// --- API GIỎ HÀNG (CART) ---
+
+// 1. Lấy giỏ hàng của User (Join với bảng products để lấy tên, giá, ảnh)
+app.get('/api/cart/:userId', async (req, res) => {
+    try {
+        const sql = `
+            SELECT c.id as cart_item_id, c.quantity, c.size, p.* FROM cart_items c
+            JOIN products p ON c.product_id = p.id
+            WHERE c.user_id = ?`;
+        const [rows] = await db.query(sql, [req.params.userId]);
+        
+        // Map lại dữ liệu cho giống cấu trúc Frontend đang dùng
+        const cartData = rows.map(item => ({
+            ...item,
+            id: item.product_id, // Frontend dùng id sản phẩm
+            cart_item_id: item.cart_item_id // ID dòng trong bảng cart (để xóa)
+        }));
+        res.json(cartData);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 2. Thêm vào giỏ hàng
+app.post('/api/cart', async (req, res) => {
+    const { user_id, product_id, size, quantity } = req.body;
+    try {
+        await db.query(
+            'INSERT INTO cart_items (user_id, product_id, size, quantity) VALUES (?, ?, ?, ?)',
+            [user_id, product_id, size, quantity]
+        );
+        res.json({ success: true, message: 'Đã thêm vào giỏ hàng DB' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// 3. Xóa khỏi giỏ hàng (Dựa theo user_id và product_id + size, hoặc id dòng)
+app.delete('/api/cart', async (req, res) => {
+    const { user_id, product_id, size } = req.body;
+    try {
+        await db.query(
+            'DELETE FROM cart_items WHERE user_id = ? AND product_id = ? AND size = ?',
+            [user_id, product_id, size]
+        );
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// --- API WISHLIST (Tương tự Cart) ---
+app.get('/api/wishlist/:userId', async (req, res) => { /* Code SELECT JOIN products */ });
+app.post('/api/wishlist', async (req, res) => { /* Code INSERT */ });
+app.delete('/api/wishlist', async (req, res) => { /* Code DELETE */ });
