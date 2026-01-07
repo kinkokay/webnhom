@@ -106,15 +106,8 @@ function updateNavbar() {
     }
 
     // Hiển thị tên user nếu đã đăng nhập
-   if (currentState.user) {
-        // LỖI CŨ: uBtn.innerText = currentState.user; -> Ra [object Object]
-        
-        // SỬA THÀNH: Lấy full_name hoặc email, cắt lấy tên đầu cho gọn
-        let displayName = currentState.user.full_name || currentState.user.email;
-        // Nếu là email dài quá thì cắt lấy phần trước @
-        if(displayName.includes('@')) displayName = displayName.split('@')[0];
-        
-        uBtn.innerText = displayName.toUpperCase();
+    if (currentState.user) {
+        uBtn.innerText = currentState.user.email.split('@')[0].toUpperCase();
     } else {
         uBtn.innerText = 'LOGIN';
     }
@@ -382,55 +375,12 @@ async function confirmAddToCart(size) {
     updateNavbar();
     closeModal();
 }
-// Thêm async vào đầu hàm
-async function removeFromCart(index) {
-    // 1. Lấy thông tin món hàng cần xóa (để lấy ID và Size gửi lên server)
-    const itemToDelete = currentState.cart[index];
-    
-    // Nếu không tìm thấy món hàng thì dừng (phòng lỗi)
-    if (!itemToDelete) return;
-
-    // --- TRƯỜNG HỢP A: ĐÃ ĐĂNG NHẬP (Xóa trong Database) ---
-    if (currentState.user) {
-        try {
-            const response = await fetch('/api/cart', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    user_id: currentState.user.id,
-                    product_id: itemToDelete.id, // ID sản phẩm
-                    size: itemToDelete.size      // Size cần xóa
-                })
-            });
-
-            if (response.ok) {
-                // Xóa thành công trên Server -> Gọi hàm đồng bộ để kéo giỏ hàng mới nhất về
-                await syncCartFromDB();
-                showToast('Đã xóa sản phẩm khỏi giỏ hàng.');
-            } else {
-                showToast('Lỗi: Không thể xóa sản phẩm.');
-            }
-        } catch (err) {
-            console.error("Lỗi xóa giỏ hàng:", err);
-            showToast('Lỗi kết nối Server.');
-        }
-    } 
-    
-    // --- TRƯỜNG HỢP B: CHƯA ĐĂNG NHẬP (Xóa trong LocalStorage) ---
-    else {
-        // Cắt bỏ phần tử khỏi mảng
-        currentState.cart.splice(index, 1);
-        
-        // Lưu lại mảng mới vào LocalStorage
-        localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
-        
-        showToast('Item removed from bag');
-        updateNavbar();
-    }
-
-    // --- BƯỚC CUỐI: CẬP NHẬT GIAO DIỆN ---
-    // Gọi lại openModal('CART') để vẽ lại danh sách hàng (vì danh sách đã thay đổi)
-    openModal('CART'); 
+function removeFromCart(index) {
+    currentState.cart.splice(index, 1);
+    localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
+    showToast('Item removed from bag');
+    updateNavbar();
+    openModal('CART'); // Re-render modal to show updated list
 }
 
 function toggleSizeGuide() {
@@ -517,17 +467,17 @@ function openModal(type) {
         if(currentState.user) {
             // Đã đăng nhập
             const displayName = currentState.user.name || currentState.user.email || 'User';
-        body.innerHTML = `
-        <div class="modal-body-content">
-            <h2 class="modal-title">Tài khoản</h2>
-            <div style="text-align: center; padding: 2rem 0;">
-                <p style="margin-bottom: 2rem; font-size: 1.2rem;">
-                   Xin chào, <strong>${currentState.user.full_name || 'Bạn'}</strong>
-                </p>
-                <button onclick="logout()" class="modal-btn">Đăng xuất</button>
-            </div>
-        </div>`;
-    } else {
+            body.innerHTML = `
+                <div class="modal-body-content">
+                    <h2 class="modal-title">Tài khoản</h2>
+                    <div style="text-align: center; padding: 2rem 0;">
+                        <p style="margin-bottom: 2rem; font-size: 1.2rem;">
+                            Xin chào, <strong>${displayName}</strong>
+                        </p>
+                        <button onclick="logout()" class="modal-btn">Đăng xuất</button>
+                    </div>
+                </div>`;
+        } else {
             // Chưa đăng nhập
             body.innerHTML = `
                 <div class="modal-body-content">
@@ -787,11 +737,7 @@ function login() {
 
 function logout() {
     currentState.user = null;
-    currentState.cart = [];
-    currentState.wishlist = [];
-    localStorage.removeItem('matmat_user'); 
-    localStorage.removeItem('matmat_cart');
-    localStorage.removeItem('matmat_wishlist');
+    localStorage.removeItem('currentUser');
     showToast('Signed out');
     updateNavbar();
     closeModal();
@@ -946,7 +892,6 @@ async function handleLogin() {
         localStorage.setItem('matmat_user', JSON.stringify(userToSave));
 
         showToast(`Chào mừng trở lại, ${userToSave.full_name || userToSave.email}`);
-        await syncCartFromDB();
         updateNavbar();
         closeModal();
 
@@ -1018,43 +963,4 @@ function isValidPhone(phone) {
     // Kiểm tra số điện thoại Việt Nam (bắt đầu bằng 0, theo sau là 9 chữ số)
     const re = /(0[3|5|7|8|9])+([0-9]{8})\b/g;
     return re.test(phone);
-}
-
-async function syncCartFromDB() {
-    if (!currentState.user) return;
-
-    try {
-        const res = await fetch(`/api/cart/${currentState.user.id}`);
-        if (!res.ok) throw new Error('Lỗi tải giỏ hàng');
-
-        const dbCart = await res.json();
-        
-        // --- SỬA Ở ĐÂY: MAP DỮ LIỆU ---
-        // Biến đổi dữ liệu từ DB (snake_case) sang chuẩn Frontend (camelCase)
-        currentState.cart = dbCart.map(item => ({
-            ...item,
-            // 1. Map lại ID: Frontend cần 'id' là id sản phẩm
-            id: item.product_id || item.id, 
-            
-            // 2. Map lại Ảnh: Frontend cần 'image', DB trả về 'image_url'
-            image: item.image || item.image_url || "", 
-            
-            // 3. Map lại Giá: Đảm bảo là số (Number)
-            price: Number(item.price),
-            originalPrice: item.original_price ? Number(item.original_price) : null,
-            
-            // 4. Giữ nguyên size và quantity
-            size: item.size,
-            quantity: item.quantity,
-            
-            // 5. Lưu thêm ID dòng trong giỏ hàng (để xóa chính xác nếu cần sau này)
-            cart_item_id: item.cart_item_id 
-        }));
-        // -----------------------------
-        
-        updateNavbar();
-
-    } catch (err) {
-        console.error("Lỗi đồng bộ giỏ hàng:", err);
-    }
 }
