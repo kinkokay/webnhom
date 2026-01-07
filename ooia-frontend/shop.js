@@ -780,7 +780,11 @@ function login() {
 
 function logout() {
     currentState.user = null;
-    localStorage.removeItem('currentUser');
+    currentState.cart = [];
+    currentState.wishlist = [];
+    localStorage.removeItem('matmat_user'); 
+    localStorage.removeItem('matmat_cart');
+    localStorage.removeItem('matmat_wishlist');
     showToast('Signed out');
     updateNavbar();
     closeModal();
