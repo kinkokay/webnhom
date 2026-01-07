@@ -220,20 +220,15 @@ app.get('/api/wishlist/:userId', async (req, res) => { /* Code SELECT JOIN produ
 app.post('/api/wishlist', async (req, res) => { /* Code INSERT */ });
 app.delete('/api/wishlist', async (req, res) => { /* Code DELETE */ });
 
-// Trong server.js
-app.get('/api/cart/:userId', async (req, res) => {
+app.delete('/api/cart', async (req, res) => {
+    // Client gửi product_id nhưng DB có thể cần product_id
+    const { user_id, product_id, size } = req.body; 
     try {
-        // PHẢI CÓ: JOIN products p ON ...
-        // Để lấy được p.image_url, p.name, p.price
-        const sql = `
-            SELECT c.id as cart_item_id, c.quantity, c.size, c.product_id, 
-                   p.name, p.price, p.image_url, p.original_price
-            FROM cart_items c
-            JOIN products p ON c.product_id = p.id
-            WHERE c.user_id = ?`;
-            
-        const [rows] = await db.query(sql, [req.params.userId]);
-        res.json(rows);
+        await db.query(
+            'DELETE FROM cart_items WHERE user_id = ? AND product_id = ? AND size = ?',
+            [user_id, product_id, size]
+        );
+        res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
