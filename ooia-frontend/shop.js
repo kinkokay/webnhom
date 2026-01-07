@@ -822,24 +822,24 @@ async function handleLogin() {
    // 1. Validate Email/Tên đăng nhập
     if (!email) {
         showToast('Vui lòng nhập Email đăng nhập!');
-        usernameInput.focus();
+        usernameInputEl.focus()
         return;
     }
     if (!isValidEmail(email)) {
         showToast('Định dạng Email không hợp lệ!');
-        usernameInput.focus();
+        usernameInputEl.focus();
         return;
     }
 
     // 2. Validate Mật khẩu
     if (!pass) {
         showToast('Vui lòng nhập Mật khẩu!');
-        passwordInput.focus();
+        passwordInputEl.focus();
         return;
     }
     if (pass.length < 6) {
         showToast('Mật khẩu phải có ít nhất 6 ký tự!');
-        passwordInput.focus();
+        passwordInputEl.focus();
         return;
     }
 
