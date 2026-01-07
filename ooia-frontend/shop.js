@@ -136,10 +136,16 @@ function handleLogout() {
 // --- INIT ---
 document.addEventListener('DOMContentLoaded', async () => {
     renderHero();
-    renderCategories();
-    updateNavbar();
+    // updateNavbar(); // Xóa dòng này ở đây, để syncCartFromDB tự gọi sau
     await fetchProducts(); 
-    
+    renderCategories();
+
+    // Nếu đã đăng nhập, tải giỏ hàng từ DB về
+    if (currentState.user) {
+        await syncCartFromDB();
+    } else {
+        updateNavbar(); // Nếu chưa đăng nhập, chỉ cần update từ localStorage
+    }
 });
 
 async function fetchProducts() {
@@ -342,10 +348,12 @@ function initAddToCart(id) {
 }
 
 async function confirmAddToCart(size) {
-    if(!currentState.selectedProductForCart) return;
-    const priceAsNumber = Number(currentState.selectedProductForCart.price);
+    // SỬA LỖI 1: Lấy đúng biến sản phẩm đang chọn
+    const product = currentState.selectedProductForCart;
     
-// --- LOGIC MỚI: CHECK USER ---
+    if(!product) return;
+
+    // --- LOGIC MỚI: CHECK USER ---
     if (currentState.user) {
         // A. ĐÃ ĐĂNG NHẬP -> GỌI API
         try {
@@ -359,22 +367,32 @@ async function confirmAddToCart(size) {
                     quantity: 1
                 })
             });
-            // Sau khi thêm DB thành công, cần tải lại giỏ hàng mới nhất từ DB
+            
+            // SỬA LỖI 2: Gọi hàm syncCartFromDB (đã định nghĩa ở Bước 1)
             await syncCartFromDB(); 
+            
         } catch (err) {
             console.error(err);
+            showToast('Lỗi server khi thêm vào giỏ');
         }
     } else {
-        // B. CHƯA ĐĂNG NHẬP -> DÙNG LOCAL STORAGE (Code cũ của bạn)
-        const item = { ...product, size, quantity: 1 };
+        // B. CHƯA ĐĂNG NHẬP -> DÙNG LOCAL STORAGE
+        // SỬA LỖI 1: Dùng biến 'product' đã khai báo ở đầu hàm
+        const item = { 
+            ...product, 
+            size: size, 
+            quantity: 1 
+        };
+        
         currentState.cart.push(item);
         localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
+        updateNavbar(); // Cập nhật badge số lượng
     }
 
-    showToast(`Added to Cart`);
-    updateNavbar();
+    showToast(`Added to Cart: ${product.name} (Size ${size})`);
     closeModal();
 }
+
 function removeFromCart(index) {
     currentState.cart.splice(index, 1);
     localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
@@ -963,4 +981,35 @@ function isValidPhone(phone) {
     // Kiểm tra số điện thoại Việt Nam (bắt đầu bằng 0, theo sau là 9 chữ số)
     const re = /(0[3|5|7|8|9])+([0-9]{8})\b/g;
     return re.test(phone);
+}
+
+// --- THÊM HÀM NÀY VÀO shop.js ---
+async function syncCartFromDB() {
+    if (!currentState.user) return;
+    try {
+        // Gọi API lấy giỏ hàng mới nhất
+        const res = await fetch(`/api/cart/${currentState.user.id}`);
+        const data = await res.json();
+
+        // Map dữ liệu từ DB sang format của Frontend (quan trọng là ảnh và giá)
+        currentState.cart = data.map(item => ({
+            ...item,
+            // Backend trả về image_url, nhưng frontend dùng biến 'image'
+            image: item.image_url || item.image || item.img, 
+            price: Number(item.price), // Đảm bảo giá là số
+            originalPrice: item.original_price ? Number(item.original_price) : null
+        }));
+
+        // Cập nhật lại số lượng trên Navbar
+        updateNavbar();
+        
+        // Nếu modal giỏ hàng đang mở, render lại để thấy thay đổi ngay
+        const modalBody = document.getElementById('modal-body');
+        if (modalBody && !document.getElementById('modal-overlay').classList.contains('hidden')) {
+            // Kiểm tra xem có đang ở modal Cart không, nếu có thì render lại
+            // (Cách đơn giản nhất là gọi lại openModal('CART') nếu đang mở)
+        }
+    } catch (err) {
+        console.error("Lỗi đồng bộ giỏ hàng:", err);
+    }
 }
