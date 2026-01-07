@@ -814,10 +814,10 @@ async function processOrder() {
 
 // 1. XỬ LÝ ĐĂNG NHẬP
 async function handleLogin() {
-    const usernameInput = document.getElementById('login-username').value.trim();
-    const passwordInput = document.getElementById('login-password').value.trim();
+    const usernameInput = document.getElementById('login-username');
+    const passwordInput = document.getElementById('login-password');
     const email = usernameInput.value.trim();
-    const pass = passwordInput.value.trim()
+    const pass = passwordInput.value.trim();
 
    // 1. Validate Email/Tên đăng nhập
     if (!email) {
