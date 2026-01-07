@@ -80,7 +80,7 @@ let currentState = {
     slideIndex: 0,
     // Cập nhật: Lấy user từ localStorage với key 'matmat_user' của BackEnd
     user: JSON.parse(localStorage.getItem('matmat_user')) || null, 
-    cart: [],
+    cart: JSON.parse(localStorage.getItem('matmat_cart')) || [],
     wishlist: [],
     selectedProductForCart: null
 };
@@ -342,8 +342,10 @@ function initAddToCart(id) {
 
 function confirmAddToCart(size) {
     if(!currentState.selectedProductForCart) return;
+    const priceAsNumber = Number(currentState.selectedProductForCart.price);
     const item = { ...currentState.selectedProductForCart, size, quantity: 1 };
     currentState.cart.push(item);
+    localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
     showToast(`Added ${item.name} (${size}) to Cart`);
     updateNavbar();
     closeModal();
@@ -351,6 +353,7 @@ function confirmAddToCart(size) {
 
 function removeFromCart(index) {
     currentState.cart.splice(index, 1);
+    localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
     showToast('Item removed from bag');
     updateNavbar();
     openModal('CART'); // Re-render modal to show updated list
@@ -800,7 +803,9 @@ async function processOrder() {
         
         if (response.ok) {
             showToast(`Đặt hàng thành công! Mã đơn: ${result.orderId}`);
+            // Reset biến giỏ hàng
             currentState.cart = [];
+            localStorage.removeItem('matmat_cart');
             updateNavbar();
             closeModal();
         } else {
