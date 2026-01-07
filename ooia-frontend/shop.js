@@ -106,8 +106,15 @@ function updateNavbar() {
     }
 
     // Hiển thị tên user nếu đã đăng nhập
-    if (currentState.user) {
-        uBtn.innerText = currentState.user.email.split('@')[0].toUpperCase();
+   if (currentState.user) {
+        // LỖI CŨ: uBtn.innerText = currentState.user; -> Ra [object Object]
+        
+        // SỬA THÀNH: Lấy full_name hoặc email, cắt lấy tên đầu cho gọn
+        let displayName = currentState.user.full_name || currentState.user.email;
+        // Nếu là email dài quá thì cắt lấy phần trước @
+        if(displayName.includes('@')) displayName = displayName.split('@')[0];
+        
+        uBtn.innerText = displayName.toUpperCase();
     } else {
         uBtn.innerText = 'LOGIN';
     }
@@ -510,17 +517,17 @@ function openModal(type) {
         if(currentState.user) {
             // Đã đăng nhập
             const displayName = currentState.user.name || currentState.user.email || 'User';
-            body.innerHTML = `
-                <div class="modal-body-content">
-                    <h2 class="modal-title">Tài khoản</h2>
-                    <div style="text-align: center; padding: 2rem 0;">
-                        <p style="margin-bottom: 2rem; font-size: 1.2rem;">
-                            Xin chào, <strong>${displayName}</strong>
-                        </p>
-                        <button onclick="logout()" class="modal-btn">Đăng xuất</button>
-                    </div>
-                </div>`;
-        } else {
+        body.innerHTML = `
+        <div class="modal-body-content">
+            <h2 class="modal-title">Tài khoản</h2>
+            <div style="text-align: center; padding: 2rem 0;">
+                <p style="margin-bottom: 2rem; font-size: 1.2rem;">
+                   Xin chào, <strong>${currentState.user.full_name || 'Bạn'}</strong>
+                </p>
+                <button onclick="logout()" class="modal-btn">Đăng xuất</button>
+            </div>
+        </div>`;
+    } else {
             // Chưa đăng nhập
             body.innerHTML = `
                 <div class="modal-body-content">
