@@ -136,7 +136,7 @@ function handleLogout() {
 // --- INIT ---
 document.addEventListener('DOMContentLoaded', async () => {
     renderHero();
-    // updateNavbar(); // Xóa dòng này ở đây, để syncCartFromDB tự gọi sau
+    // updateNavbar(); 
     await fetchProducts(); 
     renderCategories();
 
@@ -368,7 +368,6 @@ async function confirmAddToCart(size) {
                 })
             });
             
-            // SỬA LỖI 2: Gọi hàm syncCartFromDB (đã định nghĩa ở Bước 1)
             await syncCartFromDB(); 
             
         } catch (err) {
@@ -377,7 +376,6 @@ async function confirmAddToCart(size) {
         }
     } else {
         // B. CHƯA ĐĂNG NHẬP -> DÙNG LOCAL STORAGE
-        // SỬA LỖI 1: Dùng biến 'product' đã khai báo ở đầu hàm
         const item = { 
             ...product, 
             size: size, 
