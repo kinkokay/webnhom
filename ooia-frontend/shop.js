@@ -81,7 +81,7 @@ let currentState = {
     // Cập nhật: Lấy user từ localStorage với key 'matmat_user' của BackEnd
     user: JSON.parse(localStorage.getItem('matmat_user')) || null, 
     cart: JSON.parse(localStorage.getItem('matmat_cart')) || [],
-    wishlist: [],
+    wishlist: JSON.parse(localStorage.getItem('matmat_wishlist')) || [],
     selectedProductForCart: null
 };
 
@@ -320,6 +320,7 @@ function toggleWishlist(id) {
         currentState.wishlist.splice(idx, 1);
         showToast('Removed from Wishlist');
     }
+    localStorage.setItem('matmat_wishlist', JSON.stringify(currentState.wishlist));
     updateNavbar();
     
     // Update UI icons without re-rendering everything
