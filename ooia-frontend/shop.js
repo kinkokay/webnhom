@@ -375,12 +375,55 @@ async function confirmAddToCart(size) {
     updateNavbar();
     closeModal();
 }
-function removeFromCart(index) {
-    currentState.cart.splice(index, 1);
-    localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
-    showToast('Item removed from bag');
-    updateNavbar();
-    openModal('CART'); // Re-render modal to show updated list
+// Thêm async vào đầu hàm
+async function removeFromCart(index) {
+    // 1. Lấy thông tin món hàng cần xóa (để lấy ID và Size gửi lên server)
+    const itemToDelete = currentState.cart[index];
+    
+    // Nếu không tìm thấy món hàng thì dừng (phòng lỗi)
+    if (!itemToDelete) return;
+
+    // --- TRƯỜNG HỢP A: ĐÃ ĐĂNG NHẬP (Xóa trong Database) ---
+    if (currentState.user) {
+        try {
+            const response = await fetch('/api/cart', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: currentState.user.id,
+                    product_id: itemToDelete.id, // ID sản phẩm
+                    size: itemToDelete.size      // Size cần xóa
+                })
+            });
+
+            if (response.ok) {
+                // Xóa thành công trên Server -> Gọi hàm đồng bộ để kéo giỏ hàng mới nhất về
+                await syncCartFromDB();
+                showToast('Đã xóa sản phẩm khỏi giỏ hàng.');
+            } else {
+                showToast('Lỗi: Không thể xóa sản phẩm.');
+            }
+        } catch (err) {
+            console.error("Lỗi xóa giỏ hàng:", err);
+            showToast('Lỗi kết nối Server.');
+        }
+    } 
+    
+    // --- TRƯỜNG HỢP B: CHƯA ĐĂNG NHẬP (Xóa trong LocalStorage) ---
+    else {
+        // Cắt bỏ phần tử khỏi mảng
+        currentState.cart.splice(index, 1);
+        
+        // Lưu lại mảng mới vào LocalStorage
+        localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
+        
+        showToast('Item removed from bag');
+        updateNavbar();
+    }
+
+    // --- BƯỚC CUỐI: CẬP NHẬT GIAO DIỆN ---
+    // Gọi lại openModal('CART') để vẽ lại danh sách hàng (vì danh sách đã thay đổi)
+    openModal('CART'); 
 }
 
 function toggleSizeGuide() {
