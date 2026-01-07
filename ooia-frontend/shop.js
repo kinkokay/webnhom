@@ -393,51 +393,12 @@ async function confirmAddToCart(size) {
     closeModal();
 }
 
-async function removeFromCart(index) {
-    // 1. Lấy thông tin sản phẩm cần xóa
-    const itemToDelete = currentState.cart[index];
-    if (!itemToDelete) return;
-
-    // 2. Kiểm tra trạng thái đăng nhập
-    if (currentState.user) {
-        // --- TRƯỜNG HỢP: ĐÃ ĐĂNG NHẬP (GỌI API) ---
-        try {
-            const res = await fetch('/api/cart', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    user_id: currentState.user.id,
-                    product_id: itemToDelete.id, // ID sản phẩm
-                    size: itemToDelete.size
-                })
-            });
-
-            const data = await res.json();
-            
-            if (data.success) {
-                // Xóa thành công trên Server -> Đồng bộ lại về Client
-                await syncCartFromDB(); 
-                showToast('Đã xóa sản phẩm khỏi giỏ hàng');
-            } else {
-                showToast('Lỗi: Không thể xóa sản phẩm');
-                console.error(data.message);
-            }
-        } catch (err) {
-            console.error("Lỗi xóa giỏ hàng:", err);
-            showToast('Lỗi kết nối Server');
-        }
-    } else {
-        // --- TRƯỜNG HỢP: KHÁCH VÃNG LAI (XÓA LOCALSTORAGE) ---
-        currentState.cart.splice(index, 1);
-        localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
-        
-        // Cập nhật lại giao diện ngay lập tức
-        updateNavbar();
-        
-        // Nếu đang mở modal Cart thì render lại để thấy mất dòng đó
-        openModal('CART');
-        showToast('Item removed from bag');
-    }
+function removeFromCart(index) {
+    currentState.cart.splice(index, 1);
+    localStorage.setItem('matmat_cart', JSON.stringify(currentState.cart));
+    showToast('Item removed from bag');
+    updateNavbar();
+    openModal('CART'); // Re-render modal to show updated list
 }
 
 function toggleSizeGuide() {

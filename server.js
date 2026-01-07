@@ -220,16 +220,3 @@ app.get('/api/wishlist/:userId', async (req, res) => { /* Code SELECT JOIN produ
 app.post('/api/wishlist', async (req, res) => { /* Code INSERT */ });
 app.delete('/api/wishlist', async (req, res) => { /* Code DELETE */ });
 
-app.delete('/api/cart', async (req, res) => {
-    // Client gửi product_id nhưng DB có thể cần product_id
-    const { user_id, product_id, size } = req.body; 
-    try {
-        await db.query(
-            'DELETE FROM cart_items WHERE user_id = ? AND product_id = ? AND size = ?',
-            [user_id, product_id, size]
-        );
-        res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
